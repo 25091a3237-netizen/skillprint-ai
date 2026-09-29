@@ -24,6 +24,701 @@ window.MOCK_DATA = {
     source: "Field Research: Team Innovexa1 Primary Data Collection, Sep 2026"
   },
 
+  // ─── AUTHENTICATION ACCOUNTS (CANDIDATES & RECRUITERS) ──────────────────────
+  authUsers: {
+    candidates: [
+      {
+        id: "cand-1",
+        role: "candidate",
+        name: "Ananya",
+        email: "ananya.candidate@skillprint.ai",
+        username: "ananya-dev",
+        password: "Candidate@123",
+        headline: "Final-year CS Student | Applied ML & SQL Practitioner | SAP SkillBridge Certified",
+        institution: "Dr. B.R. Ambedkar Inst. of Tech (Tier-3 Rural Autonomous)",
+        city: "Salem, Tamil Nadu",
+        avatarInitials: "AN",
+        avatarColor: "#0070F2",
+        profileId: "cand-1"
+      },
+      {
+        id: "cand-2",
+        role: "candidate",
+        name: "Vikram Sharma",
+        email: "vikram.sharma@skillprint.ai",
+        username: "vikram-ml",
+        password: "Candidate@123",
+        headline: "Junior ML Engineer | Kaggle Silver | Microservices & Docker Practitioner",
+        institution: "Government Engineering College Bhopal (Tier-2 State)",
+        city: "Bhopal, Madhya Pradesh",
+        avatarInitials: "VS",
+        avatarColor: "#0F9D8A",
+        profileId: "cand-2"
+      },
+      {
+        id: "cand-3",
+        role: "candidate",
+        name: "Priya Patel",
+        email: "priya.patel@skillprint.ai",
+        username: "priya-cap",
+        password: "Candidate@123",
+        headline: "SAP CAP & BPMN Developer | Career Returner | Cloud ERP Solutions",
+        institution: "IGNOU Distance Learning Open University (Reskilling Path)",
+        city: "Surat, Gujarat",
+        avatarInitials: "PP",
+        avatarColor: "#6B4FA3",
+        profileId: "cand-3"
+      },
+      {
+        id: "cand-4",
+        role: "candidate",
+        name: "Rahul Verma",
+        email: "rahul.verma@skillprint.ai",
+        username: "rahul-api",
+        password: "Candidate@123",
+        headline: "Cloud Integration Associate | REST APIs & Microservices | Postman Student Expert",
+        institution: "Polytechnic Diploma -> Lateral Entry Degree College (Tier-3)",
+        city: "Gorakhpur, Uttar Pradesh",
+        avatarInitials: "RV",
+        avatarColor: "#F58B1F",
+        profileId: "cand-4"
+      },
+      {
+        id: "cand-5",
+        role: "candidate",
+        name: "Sneha Kulkarni",
+        email: "sneha.kulkarni@skillprint.ai",
+        username: "sneha-data",
+        password: "Candidate@123",
+        headline: "Business Analytics Associate | Tableau Featured Author | ESG Storytelling",
+        institution: "Government Women's Polytechnic College (Tier-3 Regional)",
+        city: "Solapur, Maharashtra",
+        avatarInitials: "SK",
+        avatarColor: "#2BA05A",
+        profileId: "cand-5"
+      },
+      {
+        id: "cand-6",
+        role: "candidate",
+        name: "Devansh Naidu",
+        email: "devansh.naidu@skillprint.ai",
+        username: "devansh-vision",
+        password: "Candidate@123",
+        headline: "Junior ML Engineer | Computer Vision & PyTorch | HuggingFace Spaces",
+        institution: "Private College of Science & Technology (Tier-3, Warangal)",
+        city: "Warangal, Telangana",
+        avatarInitials: "DN",
+        avatarColor: "#D13B47",
+        profileId: "cand-6"
+      },
+      {
+        id: "cand-7",
+        role: "candidate",
+        name: "Aisha Khan",
+        email: "aisha.khan@skillprint.ai",
+        username: "aisha-ui5",
+        password: "Candidate@123",
+        headline: "SAP Junior Developer | SAP UI5 & Fiori Elements | Clean Architecture",
+        institution: "AMU-Affiliated Engineering College (Tier-2 Minority Institution)",
+        city: "Aligarh, Uttar Pradesh",
+        avatarInitials: "AK",
+        avatarColor: "#0070F2",
+        profileId: "cand-7"
+      },
+      {
+        id: "cand-person1",
+        role: "candidate",
+        name: "person1",
+        email: "person1@skillprint.ai",
+        username: "person1",
+        password: "Candidate@123",
+        headline: "person1's Verified Skills & Evidence Profile | Full-Stack & ML Practitioner",
+        institution: "Autonomous Institute of Engineering & Technology",
+        city: "Hyderabad, Telangana",
+        avatarInitials: "P1",
+        avatarColor: "#0070F2",
+        profileId: "cand-person1"
+      }
+    ],
+    recruiters: [
+      {
+        id: "rec-1",
+        role: "recruiter",
+        name: "Sarah Jenkins",
+        email: "sarah.jenkins@sap.com",
+        password: "Recruiter@2026",
+        title: "Lead Technical Talent Partner",
+        department: "SAP Labs India • Global Talent Acquisition",
+        org: "SAP SE",
+        ssoProvider: "SAP Cloud Identity Services (IAS)",
+        avatarInitials: "SJ",
+        avatarColor: "#0F9D8A",
+        badge: "Lead Technical Recruiter",
+        accessLevel: "Enterprise Administrator"
+      },
+      {
+        id: "rec-2",
+        role: "recruiter",
+        name: "Rajiv Menon",
+        email: "rajiv.menon@sap.com",
+        password: "Recruiter@2026",
+        title: "Director, Engineering Talent & Inclusive Hiring",
+        department: "SAP SuccessFactors Strategic Workforce Operations",
+        org: "SAP SE",
+        ssoProvider: "SAP Cloud Identity Services (IAS)",
+        avatarInitials: "RM",
+        avatarColor: "#6B4FA3",
+        badge: "Hiring Director",
+        accessLevel: "Executive Hiring Committee"
+      }
+    ]
+  },
+
+  // ─── CANDIDATE PROFILES MAPPING ───────────────────────────────────────────
+  candidateProfiles: {
+    "cand-2": {
+      id: "cand-2",
+      name: "Vikram Sharma",
+      age: 23,
+      pronouns: "He/Him",
+      headline: "Junior ML Engineer | Kaggle Silver | Microservices & Docker Practitioner",
+      targetRoleId: "role-2",
+      blindProxy: {
+        college: "Government Engineering College Bhopal (Tier-2 State)",
+        city: "Bhopal, Madhya Pradesh",
+        gender: "Male",
+        gradYear: 2025,
+        cgpa: "8.1 / 10.0"
+      },
+      bio: "Passionate about building production-ready machine learning services and containerized inference APIs. Kaggle competition participant with verified real-world model deployment artifacts.",
+      evidenceSources: [
+        {
+          id: "ev-vs-1",
+          category: "Assessments",
+          title: "Kaggle Tabular Playground Competition — Silver Medal",
+          description: "Ranked in top 8% globally out of 2,140 participants. Engineered ensemble LightGBM + CatBoost pipelines with custom target encodings and 5-fold stratified CV.",
+          date: "2026-08-10",
+          recencyMonths: 1.5,
+          performanceScore: 94,
+          relevanceScore: 95,
+          verifiedBy: "Kaggle Competition Rank Registry (Profile: kaggle.com/vikram-sharma-ml)",
+          verificationUrl: "kaggle.com/vikram-sharma-ml/tournaments",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning"]
+        },
+        {
+          id: "ev-vs-2",
+          category: "Projects",
+          title: "Dockerized FastAPI ML Inference Microservice",
+          description: "Architected asynchronous REST prediction API serving XGBoost models with Prometheus metrics, Docker containerization, and pydantic schema validation.",
+          date: "2026-07-22",
+          recencyMonths: 2,
+          performanceScore: 91,
+          relevanceScore: 93,
+          verifiedBy: "GitHub Actions CI Pipeline & Automated Smoke Tests (44 commits, 98% passing)",
+          verificationUrl: "github.com/vikram-ml/fastapi-ml-serving",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning"]
+        },
+        {
+          id: "ev-vs-3",
+          category: "Certifications",
+          title: "AWS Certified Cloud Practitioner & Docker Fundamentals",
+          description: "Verified credential validating cloud architecture concepts, container orchestration fundamentals, and secure IAM credential isolation.",
+          date: "2026-05-14",
+          recencyMonths: 4,
+          performanceScore: 89,
+          relevanceScore: 86,
+          verifiedBy: "Amazon Web Services Training & Certification Portal",
+          verificationUrl: "aws.amazon.com/verification/AWS-CP-8921",
+          isAuthorized: true,
+          skillsDemonstrated: ["Machine Learning", "Python"]
+        },
+        {
+          id: "ev-vs-4",
+          category: "Projects",
+          title: "Time-Series Energy Demand Prediction with MLflow",
+          description: "Implemented automated experiment tracking, model artifact versioning, and parameter logging using DagsHub and MLflow on public smart grid datasets.",
+          date: "2026-06-30",
+          recencyMonths: 3,
+          performanceScore: 88,
+          relevanceScore: 90,
+          verifiedBy: "DagsHub Public Experiment Registry & MLflow Tracking Server",
+          verificationUrl: "dagshub.com/vikram-ml/energy-demand-tracker",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning", "Data Visualization"]
+        }
+      ],
+      skills: [
+        { name: "Python", category: "Programming", evidenceCount: 4, proficiency: "Advanced", confidence: 94, roleRelevance: 95 },
+        { name: "Machine Learning", category: "AI & Models", evidenceCount: 4, proficiency: "Advanced", confidence: 91, roleRelevance: 96 },
+        { name: "Data Visualization", category: "Analytics", evidenceCount: 2, proficiency: "Intermediate", confidence: 82, roleRelevance: 80 },
+        { name: "SQL", category: "Databases", evidenceCount: 2, proficiency: "Intermediate", confidence: 79, roleRelevance: 78 }
+      ]
+    },
+    "cand-3": {
+      id: "cand-3",
+      name: "Priya Patel",
+      age: 27,
+      pronouns: "She/Her",
+      headline: "SAP CAP & BPMN Practitioner | Career Returner | Cloud ERP Solutions",
+      targetRoleId: "role-3",
+      blindProxy: {
+        college: "IGNOU Distance Learning Open University (Reskilling Path)",
+        city: "Surat, Gujarat",
+        gender: "Female",
+        gradYear: 2024,
+        cgpa: "8.6 / 10.0"
+      },
+      bio: "Dedicated career returner with 3-year caregiving gap who rigorously retrained in SAP Cloud Application Programming Model (CAP), CDS schemas, and business process modeling. Recognized as a community winner in the SAP Developer Challenge 2026.",
+      evidenceSources: [
+        {
+          id: "ev-pp-1",
+          category: "Hackathons",
+          title: "SAP Developer Challenge 2026 — Community Winner",
+          description: "Built modular CAP service on SAP BTP Trial consuming custom CDS entities and exposing OData v4 services with authentication annotations. Recognized by SAP Developer Advocates.",
+          date: "2026-08-15",
+          recencyMonths: 1.5,
+          performanceScore: 96,
+          relevanceScore: 97,
+          verifiedBy: "SAP Community Developer Challenge Official Leaderboard (500+ participants)",
+          verificationUrl: "community.sap.com/challenges/2026/cap-showcase",
+          isAuthorized: true,
+          skillsDemonstrated: ["SQL", "Data Modeling"]
+        },
+        {
+          id: "ev-pp-2",
+          category: "Certifications",
+          title: "SAP Certified Associate — Business Process Modeling (BPMN 2.0)",
+          description: "Proctored certification validating enterprise business process mapping, Signavio notation conventions, gateway logic, and event handlers.",
+          date: "2026-06-20",
+          recencyMonths: 3,
+          performanceScore: 92,
+          relevanceScore: 90,
+          verifiedBy: "SAP Global Certification Registry (Credential ID: SAP-BPMN-4421)",
+          verificationUrl: "sap.com/cert/verify/SAP-BPMN-4421",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Modeling", "SQL"]
+        },
+        {
+          id: "ev-pp-3",
+          category: "Projects",
+          title: "Cloud ERP Procurement Extension with Fiori Elements",
+          description: "Constructed complete SAP Fiori Elements List Report and Object Page application backed by Node.js CAP service and SQLite mock backend with draft-enabled persistence.",
+          date: "2026-07-08",
+          recencyMonths: 2.5,
+          performanceScore: 90,
+          relevanceScore: 94,
+          verifiedBy: "GitHub Repository & SAP BTP Trial Application Log Trace",
+          verificationUrl: "github.com/priya-patel-dev/cap-procure-extension",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Modeling", "SQL", "Data Visualization"]
+        }
+      ],
+      skills: [
+        { name: "SQL", category: "Database Architecture", evidenceCount: 3, proficiency: "Advanced", confidence: 91, roleRelevance: 93 },
+        { name: "Data Modeling", category: "CDS & Schema Design", evidenceCount: 3, proficiency: "Advanced", confidence: 92, roleRelevance: 95 },
+        { name: "Data Visualization", category: "Fiori UI", evidenceCount: 2, proficiency: "Intermediate", confidence: 84, roleRelevance: 82 }
+      ]
+    },
+    "cand-4": {
+      id: "cand-4",
+      name: "Rahul Verma",
+      age: 22,
+      pronouns: "He/Him",
+      headline: "Cloud Integration Associate | REST APIs & Microservices | Postman Student Expert",
+      targetRoleId: "role-5",
+      blindProxy: {
+        college: "Polytechnic Diploma -> Lateral Entry Degree College (Tier-3)",
+        city: "Gorakhpur, Uttar Pradesh",
+        gender: "Male",
+        gradYear: 2026,
+        cgpa: "8.3 / 10.0"
+      },
+      bio: "Lateral-entry engineer passionate about distributed integration architectures, REST APIs, and automated webhook pipelines. Postman Student Expert with verified open-source transit aggregator.",
+      evidenceSources: [
+        {
+          id: "ev-rv-1",
+          category: "Projects",
+          title: "Open-Source Regional Transit REST API Aggregator",
+          description: "Architected asynchronous REST prediction API serving transit timetables with Prometheus metrics, Docker containerization, and pydantic schema validation. 1.2k GitHub stars, 48 passing integration tests.",
+          date: "2026-08-12",
+          recencyMonths: 1.5,
+          performanceScore: 93,
+          relevanceScore: 94,
+          verifiedBy: "GitHub Code Scanner & Automated Unit Tests (1.2k stars, 48 passing tests)",
+          verificationUrl: "github.com/rahul-verma-dev/transit-api-aggregator",
+          isAuthorized: true,
+          skillsDemonstrated: ["REST APIs", "Python", "SQL"]
+        },
+        {
+          id: "ev-rv-2",
+          category: "Assessments",
+          title: "Postman Student Expert API Certification & Benchmark",
+          description: "Verified industry badge validating API design, mock servers, automated contract tests, JSON schema validation, and webhook event listeners.",
+          date: "2026-06-25",
+          recencyMonths: 3,
+          performanceScore: 92,
+          relevanceScore: 93,
+          verifiedBy: "Postman Student Program Credential Engine (Verified Badge)",
+          verificationUrl: "badgr.com/public/assertions/postman-rahul-90",
+          isAuthorized: true,
+          skillsDemonstrated: ["REST APIs", "Python"]
+        },
+        {
+          id: "ev-rv-3",
+          category: "Hackathons",
+          title: "Smart Mobility Hackathon 2025 — Runner Up Citation",
+          description: "Engineered real-time bus telemetry ingestion pipeline with event-driven webhooks and sub-second dispatch notification latency.",
+          date: "2026-05-18",
+          recencyMonths: 4,
+          performanceScore: 90,
+          relevanceScore: 89,
+          verifiedBy: "Smart Mobility Hackathon Jury Citation (Top 5% of 60 teams)",
+          verificationUrl: "mobilityhack.org/citations/2025/transit-route",
+          isAuthorized: true,
+          skillsDemonstrated: ["REST APIs", "Python", "SQL"]
+        },
+        {
+          id: "ev-rv-4",
+          category: "Projects",
+          title: "Webhook-Driven ETL Ingestion Pipeline with Docker",
+          description: "Automated queue worker with Prometheus telemetry, retry back-off policies, and Postgres persistent logging for webhook payloads.",
+          date: "2026-07-30",
+          recencyMonths: 2,
+          performanceScore: 89,
+          relevanceScore: 91,
+          verifiedBy: "Docker Hub Registry & GitHub Actions CI/CD (Passing 100%)",
+          verificationUrl: "github.com/rahul-verma-dev/webhook-etl-runner",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "SQL"]
+        }
+      ],
+      skills: [
+        { name: "REST APIs", category: "Integration", evidenceCount: 3, proficiency: "Advanced", confidence: 93, roleRelevance: 95 },
+        { name: "Python", category: "Programming", evidenceCount: 4, proficiency: "Advanced", confidence: 89, roleRelevance: 90 },
+        { name: "SQL", category: "Databases", evidenceCount: 2, proficiency: "Intermediate", confidence: 82, roleRelevance: 80 }
+      ]
+    },
+    "cand-5": {
+      id: "cand-5",
+      name: "Sneha Kulkarni",
+      age: 22,
+      pronouns: "She/Her",
+      headline: "Business Analytics Associate | Tableau Featured Author | ESG Storytelling",
+      targetRoleId: "role-4",
+      blindProxy: {
+        college: "Government Women's Polytechnic College (Tier-3 Regional)",
+        city: "Solapur, Maharashtra",
+        gender: "Female",
+        gradYear: 2026,
+        cgpa: "8.8 / 10.0"
+      },
+      bio: "Analytics practitioner specializing in interactive storytelling, ESG metrics, and executive dashboards. Tableau Public Featured Author with published analyses translating complex data into business decisions.",
+      evidenceSources: [
+        {
+          id: "ev-sk-1",
+          category: "Portfolio",
+          title: "Interactive Corporate ESG Governance Storyboard",
+          description: "Selected as Tableau Public Featured Author (3,200+ reads). Explored sustainability metrics across 120 global enterprises with responsive interactive filters.",
+          date: "2026-08-10",
+          recencyMonths: 1.5,
+          performanceScore: 96,
+          relevanceScore: 95,
+          verifiedBy: "Tableau Public Featured Author Citation & Verification",
+          verificationUrl: "public.tableau.com/views/sneha-kulkarni/esg-analytics",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Visualization", "Data Storytelling"]
+        },
+        {
+          id: "ev-sk-2",
+          category: "Projects",
+          title: "SAP Analytics Cloud Predictive KPI Story Prototype",
+          description: "Built smart predict scenario and SAC responsive dashboard visualizing sales pipeline velocity on SAP BTP Trial environment.",
+          date: "2026-07-15",
+          recencyMonths: 2.5,
+          performanceScore: 91,
+          relevanceScore: 92,
+          verifiedBy: "SAP BTP Trial Account SAC Log & Dashboard Export",
+          verificationUrl: "github.com/sneha-k-analytics/sac-workforce-story",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Visualization", "SQL"]
+        },
+        {
+          id: "ev-sk-3",
+          category: "Assessments",
+          title: "Advanced Business SQL & KPI Analytical Benchmark",
+          description: "Proctored timed benchmark covering cohort retention analysis, rolling averages, window ranking, and financial metrics.",
+          date: "2026-06-20",
+          recencyMonths: 3,
+          performanceScore: 90,
+          relevanceScore: 91,
+          verifiedBy: "HackerRank Proctored Benchmark Authority (Top 5th Percentile)",
+          verificationUrl: "hackerrank.com/certificates/sneha-sql-kpi",
+          isAuthorized: true,
+          skillsDemonstrated: ["SQL", "Data Storytelling"]
+        },
+        {
+          id: "ev-sk-4",
+          category: "Certifications",
+          title: "Enterprise Data Storytelling & Business Communications",
+          description: "Accredited specialization validating executive reporting, narrative structure, data visualization best practices, and decision presentation.",
+          date: "2026-05-12",
+          recencyMonths: 4.5,
+          performanceScore: 94,
+          relevanceScore: 93,
+          verifiedBy: "Coursera Credential Engine (Honors Track Distinction)",
+          verificationUrl: "coursera.org/verify/DS-SNEHA-994",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Storytelling", "Data Visualization"]
+        }
+      ],
+      skills: [
+        { name: "Data Visualization", category: "Analytics", evidenceCount: 3, proficiency: "Advanced", confidence: 95, roleRelevance: 96 },
+        { name: "Data Storytelling", category: "Communication", evidenceCount: 3, proficiency: "Advanced", confidence: 94, roleRelevance: 95 },
+        { name: "SQL", category: "Databases", evidenceCount: 2, proficiency: "Intermediate", confidence: 85, roleRelevance: 84 }
+      ]
+    },
+    "cand-6": {
+      id: "cand-6",
+      name: "Devansh Naidu",
+      age: 23,
+      pronouns: "He/Him",
+      headline: "Junior ML Engineer | Computer Vision & PyTorch | HuggingFace Spaces",
+      targetRoleId: "role-2",
+      blindProxy: {
+        college: "Private College of Science & Technology (Tier-3, Warangal)",
+        city: "Warangal, Telangana",
+        gender: "Male",
+        gradYear: 2025,
+        cgpa: "8.2 / 10.0"
+      },
+      bio: "Computer vision and deep learning engineer with verified model spaces on HuggingFace and state hackathon first place award in agricultural telemetry.",
+      evidenceSources: [
+        {
+          id: "ev-dn-1",
+          category: "Hackathons",
+          title: "State Agri-Tech Computer Vision Hackathon — 1st Prize",
+          description: "Jury-verified first place win. Deployed YOLOv8 crop leaf disease detector processing real-time drone video feeds with 94.2% mAP accuracy.",
+          date: "2026-08-05",
+          recencyMonths: 1.8,
+          performanceScore: 95,
+          relevanceScore: 96,
+          verifiedBy: "State Agri-Tech Hackathon Jury Citation (1st of 45 teams)",
+          verificationUrl: "agritechhack.org/winners/crop-leaf-cv",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning"]
+        },
+        {
+          id: "ev-dn-2",
+          category: "Portfolio",
+          title: "HuggingFace Public Model Spaces: Leaf Vision Inference",
+          description: "Published interactive Gradio app on HuggingFace with 1,800 community downloads, ONNX runtime quantization, and real-time classification.",
+          date: "2026-07-18",
+          recencyMonths: 2.2,
+          performanceScore: 93,
+          relevanceScore: 94,
+          verifiedBy: "HuggingFace Spaces Public Registry & Metrics Trace",
+          verificationUrl: "huggingface.co/spaces/devansh-naidu/crop-disease-eval",
+          isAuthorized: true,
+          skillsDemonstrated: ["Machine Learning", "Python"]
+        },
+        {
+          id: "ev-dn-3",
+          category: "Certifications",
+          title: "Deep Learning Specialization with PyTorch",
+          description: "Proctored curriculum validating custom loss functions, backprop math, ResNet architectures, and transfer learning pipelines.",
+          date: "2026-06-10",
+          recencyMonths: 3.5,
+          performanceScore: 92,
+          relevanceScore: 90,
+          verifiedBy: "DeepLearning.AI Certificate Authority",
+          verificationUrl: "deeplearning.ai/verify/DL-DEVANSH-88",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning"]
+        },
+        {
+          id: "ev-dn-4",
+          category: "Projects",
+          title: "High-Throughput FastAPI Inference Microservice",
+          description: "Dockerized asynchronous prediction server with Redis request caching, Prometheus monitoring, and batch inference optimizations.",
+          date: "2026-05-25",
+          recencyMonths: 4,
+          performanceScore: 90,
+          relevanceScore: 92,
+          verifiedBy: "GitHub Actions Automated Benchmark & Unit Tests",
+          verificationUrl: "github.com/devansh-ml/fastapi-vision-server",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning"]
+        }
+      ],
+      skills: [
+        { name: "Python", category: "Programming", evidenceCount: 4, proficiency: "Advanced", confidence: 94, roleRelevance: 95 },
+        { name: "Machine Learning", category: "AI & Models", evidenceCount: 4, proficiency: "Advanced", confidence: 93, roleRelevance: 96 },
+        { name: "SQL", category: "Databases", evidenceCount: 1, proficiency: "Intermediate", confidence: 78, roleRelevance: 75 }
+      ]
+    },
+    "cand-7": {
+      id: "cand-7",
+      name: "Aisha Khan",
+      age: 22,
+      pronouns: "She/Her",
+      headline: "SAP Junior Developer | SAP UI5 & Fiori Elements | Clean Architecture",
+      targetRoleId: "role-3",
+      blindProxy: {
+        college: "AMU-Affiliated Engineering College (Tier-2 Minority Institution)",
+        city: "Aligarh, Uttar Pradesh",
+        gender: "Female",
+        gradYear: 2026,
+        cgpa: "8.7 / 10.0"
+      },
+      bio: "Frontend enterprise architect specializing in SAP UI5, Fiori Elements, and clean code SOLID design patterns. SAP Community Developer Code Challenge runner-up.",
+      evidenceSources: [
+        {
+          id: "ev-ak-1",
+          category: "Hackathons",
+          title: "SAP Community Developer Code Challenge 2026 — Runner Up",
+          description: "Built modular SAP UI5 application utilizing custom XML views, OData v4 binding, and strict clean code principles. Recognized by SAP Developer Advocates.",
+          date: "2026-08-22",
+          recencyMonths: 1.2,
+          performanceScore: 94,
+          relevanceScore: 95,
+          verifiedBy: "SAP Community Developer Challenge Official Leaderboard",
+          verificationUrl: "community.sap.com/challenges/2026/clean-code-ui5",
+          isAuthorized: true,
+          skillsDemonstrated: ["JavaScript", "Data Visualization"]
+        },
+        {
+          id: "ev-ak-2",
+          category: "Projects",
+          title: "SAP Fiori Elements Procurement Dashboard (BTP Trial)",
+          description: "Live responsive application deployed to SAP BTP Trial consuming CAP OData v4 service with custom analytical card annotations.",
+          date: "2026-07-12",
+          recencyMonths: 2.5,
+          performanceScore: 92,
+          relevanceScore: 94,
+          verifiedBy: "SAP BTP Trial Application Log Trace & GitHub Commits",
+          verificationUrl: "github.com/aisha-khan-dev/fiori-procure-ui",
+          isAuthorized: true,
+          skillsDemonstrated: ["JavaScript", "SQL"]
+        },
+        {
+          id: "ev-ak-3",
+          category: "Certifications",
+          title: "OpenUI5 Enterprise Architecture & Component Lifecycle",
+          description: "Proctored certification validating UI5 component models, routing, data binding syntax, formatter functions, and QUnit test automation.",
+          date: "2026-06-05",
+          recencyMonths: 3.5,
+          performanceScore: 93,
+          relevanceScore: 91,
+          verifiedBy: "openSAP Credential Registry (Scored 93% Honors)",
+          verificationUrl: "open.sap.com/verify/UI5-AISHA-77",
+          isAuthorized: true,
+          skillsDemonstrated: ["JavaScript", "Data Modeling"]
+        },
+        {
+          id: "ev-ak-4",
+          category: "Projects",
+          title: "Clean Architecture Modular Enterprise TypeScript Boilerplate",
+          description: "Open-source boilerplate implementing Hexagonal architecture, dependency injection, and automated Jest test suites. 670 GitHub stars.",
+          date: "2026-05-15",
+          recencyMonths: 4.2,
+          performanceScore: 91,
+          relevanceScore: 90,
+          verifiedBy: "GitHub Verified Repository (670 Stars, 98% Test Coverage)",
+          verificationUrl: "github.com/aisha-khan-dev/clean-enterprise-ts",
+          isAuthorized: true,
+          skillsDemonstrated: ["JavaScript", "Data Modeling"]
+        }
+      ],
+      skills: [
+        { name: "JavaScript", category: "Frontend", evidenceCount: 4, proficiency: "Advanced", confidence: 93, roleRelevance: 95 },
+        { name: "SQL", category: "Databases", evidenceCount: 2, proficiency: "Intermediate", confidence: 84, roleRelevance: 82 },
+        { name: "Data Modeling", category: "Architecture", evidenceCount: 2, proficiency: "Advanced", confidence: 90, roleRelevance: 92 }
+      ]
+    },
+    "cand-person1": {
+      id: "cand-person1",
+      name: "person1",
+      age: 22,
+      pronouns: "Candidate",
+      headline: "person1's Verified Skills & Evidence Profile | Full-Stack & ML Practitioner",
+      targetRoleId: "role-1",
+      blindProxy: {
+        college: "Autonomous Institute of Engineering & Technology",
+        city: "Hyderabad, Telangana",
+        gender: "Candidate",
+        gradYear: 2026,
+        cgpa: "8.6 / 10.0"
+      },
+      bio: "person1 is an ambitious technical practitioner with verified multi-source evidence. Experienced in architecting scalable data pipelines, optimizing relational queries, and deploying machine learning services with end-to-end telemetry.",
+      evidenceSources: [
+        {
+          id: "ev-p1-1",
+          category: "Projects",
+          title: "person1's Production Analytics & ML Pipeline",
+          description: "Architected asynchronous REST prediction and SQL optimization service. Configured automated GitHub Actions CI/CD workflows with 98% test passing rate and containerized Docker execution.",
+          date: "2026-08-25",
+          recencyMonths: 1.1,
+          performanceScore: 93,
+          relevanceScore: 94,
+          verifiedBy: "GitHub Actions Automated CI/CD (Passing 98%)",
+          verificationUrl: "github.com/person1-dev/production-pipeline",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "SQL", "Machine Learning"]
+        },
+        {
+          id: "ev-p1-2",
+          category: "Assessments",
+          title: "HackerRank Proctored Advanced SQL Benchmark",
+          description: "Timed 90-minute proctored assessment solving complex windowing functions, recursive CTEs, and query execution plan optimization under production loads.",
+          date: "2026-08-01",
+          recencyMonths: 1.9,
+          performanceScore: 95,
+          relevanceScore: 96,
+          verifiedBy: "HackerRank Proctored Skill Assessment (Top 5th Percentile)",
+          verificationUrl: "hackerrank.com/certificates/person1-sql-adv",
+          isAuthorized: true,
+          skillsDemonstrated: ["SQL"]
+        },
+        {
+          id: "ev-p1-3",
+          category: "Certifications",
+          title: "Applied Machine Learning & Data Engineering Credential",
+          description: "Verified proctored certification covering feature engineering, cross-validation, gradient boosted trees, and cloud pipeline deployment.",
+          date: "2026-06-15",
+          recencyMonths: 3.2,
+          performanceScore: 91,
+          relevanceScore: 89,
+          verifiedBy: "DeepLearning.AI Certificate Authority",
+          verificationUrl: "deeplearning.ai/certificates/person1-ml-91",
+          isAuthorized: true,
+          skillsDemonstrated: ["Python", "Machine Learning", "Data Modeling"]
+        },
+        {
+          id: "ev-p1-4",
+          category: "Portfolio",
+          title: "Interactive Open-Data Telemetry & Insights Dashboard",
+          description: "Live deployed interactive Streamlit dashboard using Plotly, DuckDB, and asynchronous data streams for exploratory analytics.",
+          date: "2026-07-20",
+          recencyMonths: 2.2,
+          performanceScore: 90,
+          relevanceScore: 91,
+          verifiedBy: "Streamlit Cloud Live Production Verification",
+          verificationUrl: "share.streamlit.io/person1/telemetry-dashboard",
+          isAuthorized: true,
+          skillsDemonstrated: ["Data Visualization", "Python"]
+        }
+      ],
+      skills: [
+        { name: "SQL", category: "Databases", evidenceCount: 2, proficiency: "Advanced", confidence: 94, roleRelevance: 96 },
+        { name: "Python", category: "Programming", evidenceCount: 3, proficiency: "Advanced", confidence: 92, roleRelevance: 94 },
+        { name: "Machine Learning", category: "AI & Models", evidenceCount: 2, proficiency: "Advanced", confidence: 90, roleRelevance: 91 },
+        { name: "Data Visualization", category: "Analytics", evidenceCount: 1, proficiency: "Intermediate", confidence: 85, roleRelevance: 82 }
+      ]
+    }
+  },
+
   // ─── FOCUS PERSONA: ANANYA ──────────────────────────────────────────────────
   ananyaProfile: {
     id: "cand-1",
@@ -950,3 +1645,163 @@ window.MOCK_DATA = {
     ]
   }
 };
+
+// Link cand-1 to ananyaProfile
+if (window.MOCK_DATA && window.MOCK_DATA.candidateProfiles) {
+  window.MOCK_DATA.candidateProfiles["cand-1"] = window.MOCK_DATA.ananyaProfile;
+}
+
+// Dynamic Multi-Profile Manager: retrieves or initializes dedicated profile for any candidate
+window.MOCK_DATA.getOrCreateCandidateProfile = function(user) {
+  if (!user) return window.MOCK_DATA.ananyaProfile;
+  const rawId = user.id || user.profileId || 'cand-1';
+  const cleanId = String(rawId).trim();
+  const userName = user.name || (user.username ? user.username : cleanId);
+
+  // 1. Check persistent localStorage custom profiles
+  try {
+    const customProfilesStr = localStorage.getItem('skillprint_custom_profiles');
+    if (customProfilesStr) {
+      const customProfiles = JSON.parse(customProfilesStr);
+      if (customProfiles && customProfiles[cleanId]) {
+        return customProfiles[cleanId];
+      }
+      // Also match by username or email or name
+      const byName = Object.values(customProfiles).find(p => 
+        p.id === cleanId || 
+        (p.name && p.name.toLowerCase() === userName.toLowerCase()) ||
+        (user.email && p.email && p.email.toLowerCase() === user.email.toLowerCase())
+      );
+      if (byName) return byName;
+    }
+  } catch (e) {
+    console.warn('Error reading custom profiles from localStorage:', e);
+  }
+
+  // 2. Check built-in candidateProfiles
+  const profiles = window.MOCK_DATA.candidateProfiles || {};
+  if (profiles[cleanId]) {
+    return profiles[cleanId];
+  }
+  // Try matching by name in candidateProfiles
+  const matchInBuiltIn = Object.values(profiles).find(p => 
+    p.name && p.name.toLowerCase() === userName.toLowerCase()
+  );
+  if (matchInBuiltIn) {
+    return matchInBuiltIn;
+  }
+
+  if (cleanId === 'cand-1' || userName.toLowerCase() === 'ananya') {
+    return window.MOCK_DATA.ananyaProfile;
+  }
+
+  // 3. Match from candidates pool
+  const candInPool = (window.MOCK_DATA.candidates || []).find(c => 
+    c.id === cleanId || 
+    (c.name && c.name.toLowerCase() === userName.toLowerCase())
+  );
+  if (candInPool && profiles[candInPool.id]) {
+    return profiles[candInPool.id];
+  }
+
+  // 4. Create new dynamic profile for this user (e.g. person1 or registered user)
+  const initials = userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || userName.slice(0, 2).toUpperCase() || 'CP';
+  const userSlug = userName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+  const newProfile = {
+    id: cleanId,
+    name: userName,
+    email: user.email || `${userSlug}@skillprint.ai`,
+    username: user.username || userSlug,
+    age: user.age || 22,
+    pronouns: user.pronouns || 'Candidate',
+    headline: user.headline || `${userName}'s Verified Skills & Evidence Profile`,
+    targetRoleId: user.targetRoleId || (candInPool ? 'role-1' : 'role-1'),
+    avatarInitials: initials,
+    avatarColor: user.avatarColor || '#0070F2',
+    blindProxy: {
+      college: user.institution || (candInPool?.blindProxy?.college) || 'Autonomous Regional Institute of Technology (Tier-3)',
+      city: user.city || (candInPool?.blindProxy?.city) || 'Regional Center, India',
+      gender: user.gender || 'Not Disclosed',
+      gradYear: '2026',
+      cgpa: '8.4 / 10.0'
+    },
+    bio: `${userName} is an active technical practitioner with verified multi-source evidence. Committed to continuous hands-on learning, reproducible code implementations, and objective proof over pedigree.`,
+    evidenceSources: [
+      {
+        id: `ev-${cleanId}-1`,
+        category: 'Projects',
+        title: `${userName}'s Core Architecture Repository`,
+        description: `Architected full-stack service pipeline with automated unit testing, CI/CD GitHub workflows, and containerized deployment scripts. Tested on production-like test vectors with 98% pass rate.`,
+        date: new Date().toISOString().split('T')[0],
+        recencyMonths: 0.2,
+        performanceScore: 92,
+        relevanceScore: 91,
+        verifiedBy: 'GitHub Actions Automated CI/CD (Passing 98%)',
+        verificationUrl: `github.com/${userSlug}/core-architecture-repo`,
+        isAuthorized: true,
+        skillsDemonstrated: ['Python', 'SQL', 'Data Modeling']
+      },
+      {
+        id: `ev-${cleanId}-2`,
+        category: 'Assessments',
+        title: `Proctored Algorithmic & SQL Benchmark`,
+        description: `Completed standardized 90-minute timed proctored evaluation validating relational query performance, CTEs, and algorithmic complexity.`,
+        date: '2026-08-15',
+        recencyMonths: 1.5,
+        performanceScore: 94,
+        relevanceScore: 95,
+        verifiedBy: 'HackerRank Proctored Benchmark Authority',
+        verificationUrl: `hackerrank.com/certificates/${userSlug}-benchmark`,
+        isAuthorized: true,
+        skillsDemonstrated: ['SQL', 'Python']
+      },
+      {
+        id: `ev-${cleanId}-3`,
+        category: 'Certifications',
+        title: `Applied Cloud & Data Engineering Certification`,
+        description: `Accredited industry certification validating modular service integration, API endpoints, and database schema normalization.`,
+        date: '2026-07-10',
+        recencyMonths: 2.5,
+        performanceScore: 90,
+        relevanceScore: 88,
+        verifiedBy: 'Cloud Credentials Engine & Verification Registry',
+        verificationUrl: `credential.net/verify/${cleanId}-cert`,
+        isAuthorized: true,
+        skillsDemonstrated: ['Data Modeling', 'Data Visualization']
+      }
+    ],
+    skills: [
+      { name: 'SQL', category: 'Databases', evidenceCount: 2, proficiency: 'Advanced', confidence: 92, roleRelevance: 94 },
+      { name: 'Python', category: 'Programming', evidenceCount: 2, proficiency: 'Advanced', confidence: 91, roleRelevance: 93 },
+      { name: 'Data Modeling', category: 'Architecture', evidenceCount: 2, proficiency: 'Intermediate', confidence: 85, roleRelevance: 87 },
+      { name: 'Data Visualization', category: 'Analytics', evidenceCount: 1, proficiency: 'Intermediate', confidence: 82, roleRelevance: 80 }
+    ]
+  };
+
+  // Save to custom profiles in localStorage
+  try {
+    const customProfilesStr = localStorage.getItem('skillprint_custom_profiles');
+    const customProfiles = customProfilesStr ? JSON.parse(customProfilesStr) : {};
+    customProfiles[cleanId] = newProfile;
+    localStorage.setItem('skillprint_custom_profiles', JSON.stringify(customProfiles));
+  } catch (e) {
+    console.warn('Error saving new profile to localStorage:', e);
+  }
+
+  return newProfile;
+};
+
+// Persist candidate profile updates (including evidence, consent, target roles)
+window.MOCK_DATA.saveCandidateProfile = function(profile) {
+  if (!profile || !profile.id) return;
+  try {
+    const customProfilesStr = localStorage.getItem('skillprint_custom_profiles');
+    const customProfiles = customProfilesStr ? JSON.parse(customProfilesStr) : {};
+    customProfiles[profile.id] = profile;
+    localStorage.setItem('skillprint_custom_profiles', JSON.stringify(customProfiles));
+  } catch (e) {
+    console.warn('Error saving candidate profile:', e);
+  }
+};
+

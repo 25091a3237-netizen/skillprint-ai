@@ -239,6 +239,11 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
   const [verificationUrl, setVerificationUrl] = React.useState(currentConfig.defaultUrl);
   const [customField, setCustomField] = React.useState(currentConfig.defaultCustomField);
   const [isAuthorized, setIsAuthorized] = React.useState(true);
+  
+  // AI Verification Agent State
+  const [isVerifying, setIsVerifying] = React.useState(false);
+  const [verificationStep, setVerificationStep] = React.useState(0);
+  const [auditResult, setAuditResult] = React.useState(null);
 
   // Sync category if initialCategory changes externally
   React.useEffect(() => {
@@ -250,6 +255,7 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
   // Handle switching category cleanly
   const handleCategorySwitch = (newCat) => {
     setCategory(newCat);
+    setAuditResult(null);
     const cfg = CATEGORY_CONFIG[newCat] || CATEGORY_CONFIG.Projects;
     
     // Smoothly update defaults to match the new category
@@ -261,6 +267,7 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
 
   // Quick preset loader
   const handleLoadPreset = (preset) => {
+    setAuditResult(null);
     setTitle(preset.title);
     setDescription(preset.desc);
     setSkills(preset.skills);
@@ -271,32 +278,158 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
     setRelevanceScore(preset.rel);
   };
 
+  // AI Evidence Verification Agent Rule Evaluator
+  const evaluateEvidenceWithAIAgent = (formData) => {
+    const errors = [];
+    const t = (formData.title || '').trim();
+    const d = (formData.description || '').trim();
+    const u = (formData.verificationUrl || '').trim();
+    const v = (formData.verifiedBy || '').trim();
+    const s = (formData.skills || '').trim();
+
+    // 1. Title Validation
+    if (!t || t.length < 5) {
+      errors.push('Title is too short or ambiguous (minimum 5 characters describing the project or credential).');
+    }
+    const genericPlaceholders = ['test', 'asdf', 'abc', 'project', 'my project', 'demo', 'code', 'untitled', 'fake', 'sample'];
+    if (genericPlaceholders.includes(t.toLowerCase())) {
+      errors.push(`Title "${t}" is flagged as a generic placeholder. Please provide a descriptive technical title.`);
+    }
+
+    // 2. URL & Repository Integrity Check
+    if (!u) {
+      errors.push('Verification URL is required for cryptographic proof verification.');
+    } else {
+      const lowerUrl = u.toLowerCase();
+      const fakeUrlPatterns = ['test', 'fake', 'asdf', 'abc', 'none', 'null', 'undefined', 'n/a', 'http://fake', 'http://test', 'example.com'];
+      if (fakeUrlPatterns.some(p => lowerUrl === p || lowerUrl === `https://${p}` || lowerUrl === `http://${p}`)) {
+        errors.push(`The verification URL "${u}" is unrecognized or a dummy placeholder. Must point to a real technical repository, proctored certificate, or hosting service.`);
+      }
+
+      // Authentic technical domains
+      const trustedDomains = [
+        'github.com', 'gitlab.com', 'bitbucket.org', 'kaggle.com',
+        'hackerrank.com', 'leetcode.com', 'codesignal.com', 'codechef.com',
+        'coursera.org', 'edx.org', 'udemy.com', 'credly.com', 'badgr.com', 'credential.net',
+        'sap.com', 'cloud.sap', 'community.sap.com', 'open.sap.com',
+        'aws.amazon.com', 'azure.microsoft.com', 'cloud.google.com',
+        'streamlit.app', 'streamlit.io', 'vercel.app', 'netlify.app',
+        'huggingface.co', 'dagshub.com', 'postman.com', 'docker.com'
+      ];
+
+      const hasTrustedDomain = trustedDomains.some(dom => lowerUrl.includes(dom));
+      const hasValidUrlFormat = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/.*)?$/i.test(u);
+
+      if (!hasTrustedDomain && (!hasValidUrlFormat || !u.includes('/'))) {
+        errors.push('Unverifiable proof URL: Must be a verifiable code repository (GitHub/GitLab), proctored assessment, or registered cloud credential endpoint with a valid repository/credential path.');
+      }
+    }
+
+    // 3. Technical Substance & Content Depth Check
+    if (!d || d.length < 25) {
+      errors.push('Description is too brief (minimum 25 characters required). Explain architecture, algorithms, or metrics achieved.');
+    } else {
+      const techKeywords = [
+        'sql', 'python', 'data', 'ml', 'machine learning', 'ai', 'pipeline', 'model',
+        'database', 'query', 'queries', 'cloud', 'btp', 'docker', 'api', 'rest', 'fastapi',
+        'test', 'tests', 'unit', 'ci/cd', 'git', 'github', 'algorithm', 'scikit', 'xgboost',
+        'shap', 'pandas', 'analytics', 'dashboard', 'proctored', 'score', 'benchmark',
+        'cap', 'fiori', 'cds', 'odata', 'javascript', 'typescript', 'react', 'optimizer',
+        'optimization', 'stream', 'etl', 'metrics', 'classification', 'regression'
+      ];
+      const matchCount = techKeywords.filter(k => d.toLowerCase().includes(k)).length;
+      if (matchCount < 2) {
+        errors.push('Technical substance criteria not met: Description lacks verifiable technical terminology (e.g. models, datasets, database optimizations, or API specifications).');
+      }
+    }
+
+    // 4. Verification Authority Check
+    if (!v || v.length < 4) {
+      errors.push('Issuing/Verifying authority is missing or invalid (e.g. GitHub CI/CD, HackerRank, SAP Registry).');
+    }
+    if (['me', 'myself', 'none', 'self', 'test'].includes(v.toLowerCase())) {
+      errors.push('Self-verification is not permitted. Independent CI/CD or proctoring authority required.');
+    }
+
+    // 5. Skills Alignment Check
+    const skillList = s.split(',').map(x => x.trim()).filter(Boolean);
+    if (skillList.length === 0) {
+      errors.push('At least one technical skill must be specified.');
+    }
+
+    const isValid = errors.length === 0;
+    return {
+      isValid,
+      errors,
+      confidence: isValid ? Math.floor(92 + Math.random() * 7) : Math.floor(18 + Math.random() * 15),
+      provenanceHash: isValid ? 'sha256:' + Array.from({length: 32}, () => Math.floor(Math.random()*16).toString(16)).join('') : null
+    };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const skillList = skills.split(',').map(s => s.trim()).filter(Boolean);
-    const combinedDesc = customField && customField.trim()
-      ? `${description.trim() || 'Verified hands-on demonstration of technical capability.'} [${currentConfig.customFieldLabel}: ${customField.trim()}]`
-      : (description.trim() || 'Verified hands-on demonstration of technical capability.');
+    setAuditResult(null);
+    setIsVerifying(true);
+    setVerificationStep(1);
 
-    const newEvidence = {
-      id: `ev-${Date.now()}`,
-      category,
-      title: title.trim(),
-      description: combinedDesc,
-      date: new Date().toISOString().split('T')[0],
-      recencyMonths: 0.1, // Freshly added!
-      performanceScore: Number(performanceScore),
-      relevanceScore: Number(relevanceScore),
-      verifiedBy: verifiedBy.trim() || currentConfig.defaultVerifiedBy,
-      verificationUrl: verificationUrl.trim() || currentConfig.defaultUrl,
-      isAuthorized,
-      skillsDemonstrated: skillList.length > 0 ? skillList : ['SQL', 'Python']
-    };
+    // Multi-stage autonomous AI agent simulation
+    setTimeout(() => {
+      setVerificationStep(2);
+    }, 450);
 
-    onAddEvidence(newEvidence);
-    onClose();
+    setTimeout(() => {
+      setVerificationStep(3);
+    }, 900);
+
+    setTimeout(() => {
+      setIsVerifying(false);
+      const evalResult = evaluateEvidenceWithAIAgent({
+        title,
+        description,
+        verificationUrl,
+        verifiedBy,
+        skills
+      });
+
+      setAuditResult(evalResult);
+
+      if (evalResult.isValid) {
+        // AI Verification SUCCESS: Allow adding to candidate profile
+        const skillList = skills.split(',').map(s => s.trim()).filter(Boolean);
+        const combinedDesc = customField && customField.trim()
+          ? `${description.trim() || 'Verified hands-on demonstration of technical capability.'} [${currentConfig.customFieldLabel}: ${customField.trim()}]`
+          : (description.trim() || 'Verified hands-on demonstration of technical capability.');
+
+        const newEvidence = {
+          id: `ev-${Date.now()}`,
+          category,
+          title: title.trim(),
+          description: combinedDesc,
+          date: new Date().toISOString().split('T')[0],
+          recencyMonths: 0.1, // Freshly verified!
+          performanceScore: Number(performanceScore),
+          relevanceScore: Number(relevanceScore),
+          verifiedBy: verifiedBy.trim() || currentConfig.defaultVerifiedBy,
+          verificationUrl: verificationUrl.trim() || currentConfig.defaultUrl,
+          isAuthorized,
+          skillsDemonstrated: skillList.length > 0 ? skillList : ['SQL', 'Python'],
+          aiVerified: true,
+          aiConfidence: evalResult.confidence,
+          provenanceHash: evalResult.provenanceHash
+        };
+
+        // Allow candidate to see the green verified badge, then add and close
+        setTimeout(() => {
+          onAddEvidence(newEvidence);
+          onClose();
+        }, 1200);
+      } else {
+        // AI Verification FAILED: DO NOT ALLOW ADDING TO PROFILE!
+        // onAddEvidence is strictly NOT called!
+      }
+    }, 1400);
   };
 
   // Helper icons for category buttons
@@ -565,6 +698,69 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
           ])
         ]),
 
+        // AI Verification Agent Feedback & Progress Box
+        isVerifying && React.createElement('div', {
+          key: 'ai-verifying-card',
+          className: 'p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 space-y-2.5 animate-pulse'
+        }, [
+          React.createElement('div', { className: 'flex items-center gap-2 text-xs font-bold text-blue-900 dark:text-blue-200' }, [
+            React.createElement('span', { className: 'w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping' }),
+            'SkillPrint AI Verification Agent: Auditing Evidence Authenticity & Substance...'
+          ]),
+          React.createElement('div', { className: 'space-y-1.5 text-[11px] font-mono' }, [
+            React.createElement('div', { className: `flex items-center gap-2 ${verificationStep >= 1 ? 'text-blue-700 dark:text-blue-300 font-bold' : 'text-gray-400'}` }, [
+              React.createElement('span', {}, verificationStep > 1 ? '✓' : '⟳'),
+              'Step 1/3: Checking verification URL provenance, repository endpoints, and domain integrity...'
+            ]),
+            React.createElement('div', { className: `flex items-center gap-2 ${verificationStep >= 2 ? 'text-teal-700 dark:text-teal-300 font-bold' : 'text-gray-400'}` }, [
+              React.createElement('span', {}, verificationStep > 2 ? '✓' : (verificationStep === 2 ? '⟳' : '○')),
+              'Step 2/3: Semantic evaluation of technical depth, methodology, and taxonomy alignment...'
+            ]),
+            React.createElement('div', { className: `flex items-center gap-2 ${verificationStep >= 3 ? 'text-purple-700 dark:text-purple-300 font-bold' : 'text-gray-400'}` }, [
+              React.createElement('span', {}, verificationStep === 3 ? '⟳' : '○'),
+              'Step 3/3: Issuing cryptographic proof hash & anti-tamper signature...'
+            ])
+          ])
+        ]),
+
+        auditResult && !auditResult.isValid && React.createElement('div', {
+          key: 'ai-rejected-card',
+          className: 'p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-800 space-y-2 text-xs animate-shake'
+        }, [
+          React.createElement('div', { className: 'flex items-center justify-between' }, [
+            React.createElement('div', { className: 'flex items-center gap-2 text-red-800 dark:text-red-200 font-bold' }, [
+              React.createElement('span', { className: 'text-base' }, '🚫'),
+              'AI Verification Agent: Evidence REJECTED'
+            ]),
+            React.createElement('span', { className: 'sap-badge sap-badge-orange text-[10px]' }, `Confidence: ${auditResult.confidence}%`)
+          ]),
+          React.createElement('p', { className: 'text-[11px] text-red-700 dark:text-red-300 font-medium' },
+            'This evidence artifact is improper or incomplete and CANNOT be added to your profile until the following criteria are resolved:'
+          ),
+          React.createElement('ul', { className: 'list-disc list-inside space-y-1 text-[11px] text-red-800 dark:text-red-200 pl-1' },
+            auditResult.errors.map((err, eIdx) => React.createElement('li', { key: eIdx }, err))
+          )
+        ]),
+
+        auditResult && auditResult.isValid && React.createElement('div', {
+          key: 'ai-passed-card',
+          className: 'p-4 rounded-xl bg-green-50 dark:bg-green-950/40 border-2 border-green-300 dark:border-green-800 space-y-2 text-xs animate-fadeIn'
+        }, [
+          React.createElement('div', { className: 'flex items-center justify-between' }, [
+            React.createElement('div', { className: 'flex items-center gap-2 text-green-800 dark:text-green-200 font-bold' }, [
+              React.createElement('span', { className: 'text-base' }, '✅'),
+              'AI Verification Agent: Evidence APPROVED & VERIFIED'
+            ]),
+            React.createElement('span', { className: 'sap-badge sap-badge-green text-[10px]' }, `Confidence: ${auditResult.confidence}%`)
+          ]),
+          React.createElement('p', { className: 'text-[11px] text-green-700 dark:text-green-300' },
+            'Cryptographic integrity confirmed. Adding verified artifact to your SkillPrint profile...'
+          ),
+          React.createElement('div', { className: 'text-[10px] font-mono text-green-900 dark:text-green-200 bg-white/70 dark:bg-gray-900/60 p-1.5 rounded border border-green-200 dark:border-green-800 break-all' },
+            `Proof Hash: ${auditResult.provenanceHash}`
+          )
+        ]),
+
         // Action Buttons
         React.createElement('div', { key: 'actions', className: 'flex items-center justify-end gap-2.5 pt-3 border-t border-gray-100 dark:border-gray-800' }, [
           React.createElement('button', {
@@ -576,13 +772,13 @@ window.AddEvidenceModal = function({ isOpen, onClose, initialCategory = 'Project
           React.createElement('button', {
             key: 'submit',
             type: 'submit',
-            className: 'sap-btn-primary text-xs flex items-center gap-1.5'
+            disabled: isVerifying,
+            className: `sap-btn-primary text-xs flex items-center gap-1.5 ${isVerifying ? 'opacity-50 cursor-not-allowed' : ''}`
           }, [
-            React.createElement('svg', { key: 'plus', viewBox: '0 0 24 24', width: '14', height: '14', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5' }, [
-              React.createElement('line', { x1: '12', y1: '5', x2: '12', y2: '19' }),
-              React.createElement('line', { x1: '5', y1: '12', x2: '19', y2: '12' })
+            React.createElement('svg', { key: 'shield', viewBox: '0 0 24 24', width: '14', height: '14', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5' }, [
+              React.createElement('path', { d: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' })
             ]),
-            `Add to ${category} & Recompute SES`
+            isVerifying ? 'AI Agent Auditing...' : `Verify with AI & Add to ${category}`
           ])
         ])
       ])

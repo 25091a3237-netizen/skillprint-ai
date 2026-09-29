@@ -3,23 +3,28 @@
 // granular authorization consent toggles, skills table, and skill gap & growth roadmap.
 
 window.CandidatePage = function({
+  candidateProfile,
   ananyaProfile,
   evidenceList,
   setEvidenceList,
   weights,
   onOpenWeights,
   onOpenAddEvidence,
-  roles
+  roles,
+  isRecruiter = false,
+  onReturnToRecruiterHub
 }) {
-  const [selectedRoleId, setSelectedRoleId] = React.useState(ananyaProfile.targetRoleId || 'role-1');
+  const profile = candidateProfile || ananyaProfile || (window.MOCK_DATA && window.MOCK_DATA.ananyaProfile) || {};
+  const [selectedRoleId, setSelectedRoleId] = React.useState(profile.targetRoleId || 'role-1');
   const [selectedSkillFilter, setSelectedSkillFilter] = React.useState('ALL');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = React.useState('ALL');
 
   // Compute dynamic candidate SES based on authorized evidence and active weights
   const overallSES = window.SES_ENGINE.computeCandidateSES(evidenceList, weights);
 
-  // Toggle individual evidence authorization consent
+  // Toggle individual evidence authorization consent (Disabled for recruiters)
   const handleToggleConsent = (id) => {
+    if (isRecruiter) return; // Recruiters have strictly read-only visit access
     setEvidenceList(prev => prev.map(item => {
       if (item.id === id) {
         return { ...item, isAuthorized: !item.isAuthorized };
@@ -50,6 +55,27 @@ window.CandidatePage = function({
 
   return React.createElement('div', { className: 'space-y-8 pb-12 animate-fadeIn' }, [
     
+    // 0. Recruiter Read-Only Mode Banner
+    isRecruiter && React.createElement('div', {
+      key: 'recruiter-readonly-banner',
+      className: 'p-4 rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-fadeIn'
+    }, [
+      React.createElement('div', { className: 'flex items-center gap-3 text-teal-900 dark:text-teal-200' }, [
+        React.createElement('span', { className: 'text-2xl' }, '👁️'),
+        React.createElement('div', {}, [
+          React.createElement('div', { className: 'font-bold text-sm' }, `Recruiter Inspection Mode (Read-Only) — Viewing ${profile.name}'s Verified SkillPrint`),
+          React.createElement('div', { className: 'text-[11px] text-teal-700 dark:text-teal-300' }, 'Recruiters have audit visibility to review verified evidence. Candidate evidence artifacts and authorization consent settings cannot be modified or altered.')
+        ])
+      ]),
+      onReturnToRecruiterHub && React.createElement('button', {
+        onClick: onReturnToRecruiterHub,
+        className: 'px-3.5 py-2 rounded-xl font-bold bg-[#0F9D8A] text-white hover:bg-[#0c8272] transition-all text-xs shrink-0 flex items-center gap-1.5 shadow-sm'
+      }, [
+        React.createElement('span', {}, '←'),
+        'Return to Recruiter Pool'
+      ])
+    ]),
+
     // 1. Candidate Persona & Overall SES Radial Gauge Hero Card
     React.createElement('div', {
       key: 'persona-card',
@@ -60,19 +86,19 @@ window.CandidatePage = function({
         React.createElement('div', { key: 'cand-meta', className: 'lg:col-span-7 space-y-4' }, [
           React.createElement('div', { className: 'flex flex-wrap items-center gap-3' }, [
             React.createElement('div', {
-              className: 'w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0070F2] via-[#0F9D8A] to-[#6B4FA3] text-white flex items-center justify-center font-extrabold text-xl shadow-md'
-            }, 'AN'),
+              className: 'w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0070F2] via-[#0F9D8A] to-[#6B4FA3] text-white flex items-center justify-center font-extrabold text-xl shadow-md shrink-0'
+            }, profile.avatarInitials || (profile.name ? profile.name.slice(0, 2).toUpperCase() : 'CD')),
             React.createElement('div', {}, [
-              React.createElement('div', { className: 'flex items-center gap-2' }, [
-                React.createElement('h2', { className: 'text-2xl font-bold text-gray-900 dark:text-gray-100' }, ananyaProfile.name),
-                React.createElement('span', { className: 'text-sm text-gray-500' }, `(${ananyaProfile.age} yrs • ${ananyaProfile.pronouns})`),
-                React.createElement('span', { className: 'sap-badge sap-badge-blue text-[11px]' }, 'Student Persona')
+              React.createElement('div', { className: 'flex items-center gap-2 flex-wrap' }, [
+                React.createElement('h2', { className: 'text-2xl font-bold text-gray-900 dark:text-gray-100' }, profile.name || 'Candidate Profile'),
+                profile.age && React.createElement('span', { className: 'text-sm text-gray-500' }, `(${profile.age} yrs • ${profile.pronouns || 'Candidate'})`),
+                React.createElement('span', { className: 'sap-badge sap-badge-blue text-[11px]' }, 'Verified Candidate')
               ]),
-              React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-300 font-medium' }, ananyaProfile.headline)
+              React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-300 font-medium' }, profile.headline || 'Verified Skills & Evidence Profile')
             ])
           ]),
 
-          React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-400 leading-relaxed' }, ananyaProfile.bio),
+          React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-400 leading-relaxed' }, profile.bio || 'Verified capability portfolio.'),
 
           // Target Role Quick Selector
           React.createElement('div', { className: 'pt-2 flex flex-wrap items-center gap-2' }, [
@@ -337,10 +363,13 @@ window.CandidatePage = function({
                   React.createElement('span', { className: 'font-bold text-sm text-gray-900 dark:text-gray-100' }, cat),
                   React.createElement('span', { className: 'sap-badge sap-badge-blue text-[10px]' }, `${itemsInCat.length} Items`)
                 ]),
-                React.createElement('button', {
+                !isRecruiter && onOpenAddEvidence ? React.createElement('button', {
                   onClick: () => onOpenAddEvidence(cat),
                   className: 'text-xs font-semibold text-[#0070F2] hover:underline flex items-center gap-1'
-                }, '+ Add')
+                }, '+ Add') : React.createElement('span', { className: 'text-[10px] text-gray-400 font-mono flex items-center gap-1' }, [
+                  React.createElement('span', {}, '🔒'),
+                  'Read-Only'
+                ])
               ]),
 
               // Items in category
@@ -355,8 +384,18 @@ window.CandidatePage = function({
                 }, [
                   React.createElement('div', { className: 'flex items-start justify-between gap-2 mb-1.5' }, [
                     React.createElement('h5', { className: 'font-bold text-xs text-gray-900 dark:text-gray-100 leading-snug' }, item.title),
-                    // Authorization Toggle Switch
-                    React.createElement('label', {
+                    // Authorization Toggle Switch or Read-Only Lock Indicator for Recruiters
+                    isRecruiter ? React.createElement('span', {
+                      className: `text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
+                        item.isAuthorized !== false
+                          ? 'bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800'
+                          : 'bg-gray-100 text-gray-500 border border-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                      }`,
+                      title: 'Candidate Controlled Consent (Recruiters Cannot Modify)'
+                    }, [
+                      React.createElement('span', {}, '🔒'),
+                      item.isAuthorized !== false ? 'Authorized' : 'Excluded'
+                    ]) : React.createElement('label', {
                       className: 'toggle-switch shrink-0',
                       title: item.isAuthorized ? 'Authorized (Included in SES)' : 'Unauthorized (Excluded from SES)'
                     }, [
@@ -405,12 +444,16 @@ window.CandidatePage = function({
           ]),
 
           React.createElement('h4', { className: 'text-base font-bold text-gray-900 dark:text-gray-100' },
-            'Why Ananya Matches (or Needs Growth)'
+            `Why ${profile.name || 'Candidate'} Matches (or Needs Growth)`
           ),
 
           React.createElement('div', { className: 'p-3.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 leading-relaxed' },
-            (selectedRole.whyMatchExplanation && selectedRole.whyMatchExplanation.ananya) ||
-            "Ananya exhibits strong technical foundations in SQL and Python with verified multi-source evidence. Gap analysis highlights opportunities for enterprise framework familiarity."
+            (selectedRole.whyMatchExplanation && (
+              selectedRole.whyMatchExplanation[profile.id] ||
+              selectedRole.whyMatchExplanation[profile.name?.toLowerCase()] ||
+              (selectedRole.whyMatchExplanation.ananya && selectedRole.whyMatchExplanation.ananya.replace(/Ananya/g, profile.name || 'This candidate'))
+            )) ||
+            `${profile.name || 'Candidate'} demonstrates verified skills across ${computedSkills.filter(s => s.sesScore >= 70).map(s => s.name).join(', ') || 'technical domains'}. Gap analysis highlights opportunities for role-specific framework depth.`
           ),
 
           React.createElement('div', { className: 'space-y-2 text-xs pt-1' }, [
@@ -443,27 +486,43 @@ window.CandidatePage = function({
           ]),
 
           React.createElement('div', { className: 'space-y-3' },
-            (selectedRole.skillGaps && selectedRole.skillGaps.ananya && selectedRole.skillGaps.ananya.length > 0)
-              ? selectedRole.skillGaps.ananya.map((gap, i) => React.createElement('div', {
-                  key: i,
-                  className: 'p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/40 space-y-2'
-                }, [
-                  React.createElement('div', { className: 'flex items-center justify-between' }, [
-                    React.createElement('span', { className: 'font-bold text-xs text-gray-900 dark:text-gray-100' }, gap.skill),
-                    React.createElement('span', {
-                      className: `sap-badge ${gap.severity === 'Core Gap' || gap.severity === 'Key Gap' ? 'sap-badge-orange' : 'sap-badge-blue'} text-[10px]`
-                    }, gap.severity)
-                  ]),
-                  React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-400' }, gap.reason),
-                  React.createElement('div', { className: 'pt-2 flex items-center justify-between text-xs border-t border-gray-200 dark:border-gray-700' }, [
-                    React.createElement('span', { className: 'text-gray-700 dark:text-gray-300 font-medium' }, gap.learningAction),
-                    React.createElement('button', {
-                      onClick: () => alert(`Opening guided resource: "${gap.learningAction}"`),
-                      className: 'text-[#0070F2] dark:text-blue-400 font-semibold hover:underline shrink-0'
-                    }, gap.linkText || 'Open Tutorial →')
-                  ])
-                ]))
-              : React.createElement('div', { className: 'p-4 text-xs text-gray-500' }, 'All required skills meet or exceed target threshold.')
+            (() => {
+              const rawGaps = (selectedRole.skillGaps && (
+                selectedRole.skillGaps[profile.id] ||
+                selectedRole.skillGaps[profile.name?.toLowerCase()] ||
+                selectedRole.skillGaps.ananya
+              )) || [];
+
+              // Personalize reason text dynamically for profile.name
+              const personalizedGaps = rawGaps.map(g => ({
+                ...g,
+                reason: g.reason ? g.reason.replace(/Ananya's/g, `${profile.name || 'Candidate'}'s`).replace(/Ananya/g, profile.name || 'the candidate') : ''
+              }));
+
+              if (personalizedGaps.length === 0) {
+                return React.createElement('div', { className: 'p-4 text-xs text-gray-500' }, 'All required skills meet or exceed target threshold.');
+              }
+
+              return personalizedGaps.map((gap, i) => React.createElement('div', {
+                key: i,
+                className: 'p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/40 space-y-2'
+              }, [
+                React.createElement('div', { className: 'flex items-center justify-between' }, [
+                  React.createElement('span', { className: 'font-bold text-xs text-gray-900 dark:text-gray-100' }, gap.skill),
+                  React.createElement('span', {
+                    className: `sap-badge ${gap.severity === 'Core Gap' || gap.severity === 'Key Gap' ? 'sap-badge-orange' : 'sap-badge-blue'} text-[10px]`
+                  }, gap.severity)
+                ]),
+                React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-400' }, gap.reason),
+                React.createElement('div', { className: 'pt-2 flex items-center justify-between text-xs border-t border-gray-200 dark:border-gray-700' }, [
+                  React.createElement('span', { className: 'text-gray-700 dark:text-gray-300 font-medium' }, gap.learningAction),
+                  React.createElement('button', {
+                    onClick: () => alert(`Opening guided resource: "${gap.learningAction}"`),
+                    className: 'text-[#0070F2] dark:text-blue-400 font-semibold hover:underline shrink-0'
+                  }, gap.linkText || 'Open Tutorial →')
+                ])
+              ]));
+            })()
           )
         ])
       ])

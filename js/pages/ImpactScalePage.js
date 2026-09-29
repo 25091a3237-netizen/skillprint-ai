@@ -147,7 +147,7 @@ window.ImpactScalePage = function({ impactData, onNavigateCandidate, onNavigateR
         React.createElement('button', {
           onClick: onNavigateCandidate,
           className: 'px-5 py-2.5 rounded-lg bg-white text-[#0B1F33] font-bold text-xs hover:bg-gray-100 shadow-md'
-        }, "Candidate Dashboard (Ananya)"),
+        }, "Candidate Portal"),
         React.createElement('button', {
           onClick: onNavigateRecruiter,
           className: 'px-5 py-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-semibold text-xs border border-white/30'

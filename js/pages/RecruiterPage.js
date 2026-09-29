@@ -10,7 +10,8 @@ window.RecruiterPage = function({
   isBlindScreening,
   setIsBlindScreening,
   onOpenExplainDrawer,
-  onUpdateCandidateDecision
+  onUpdateCandidateDecision,
+  onVisitCandidate
 }) {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState('ALL');
@@ -201,6 +202,16 @@ window.RecruiterPage = function({
                 React.createElement('div', { className: 'text-right' }, [
                   React.createElement('div', { className: 'text-[10px] uppercase font-bold text-gray-400' }, 'Role Match SES'),
                   React.createElement('div', { className: 'text-xl font-black text-[#0070F2] dark:text-blue-400' }, `${match.sesScore}%`)
+                ]),
+
+                // Visit Candidate Profile Button
+                React.createElement('button', {
+                  onClick: () => onVisitCandidate && onVisitCandidate(cand),
+                  className: 'px-3 py-1.5 rounded-xl border border-teal-300 dark:border-teal-700 bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 text-xs font-semibold hover:bg-teal-100 dark:hover:bg-teal-900/60 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer',
+                  title: `Visit ${cand.name}'s verified evidence portfolio (Read-Only Mode)`
+                }, [
+                  React.createElement('span', {}, '👁️'),
+                  'Visit Profile'
                 ]),
 
                 React.createElement('button', {

@@ -3,7 +3,7 @@
 // (1) Evidence Discovery, (2) Skill Inference, (3) Skill Verification,
 // (4) Opportunity Matching, (5) Skill Gap & Growth, (6) Fairness & Explainability.
 
-window.AgenticWorkflowPage = function({ agentWorkflow }) {
+window.AgenticWorkflowPage = function({ agentWorkflow, candidateName }) {
   const [selectedAgentId, setSelectedAgentId] = React.useState(1);
   const [isSimulating, setIsSimulating] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(1);
@@ -67,14 +67,14 @@ window.AgenticWorkflowPage = function({ agentWorkflow }) {
         }, [
           React.createElement('polygon', { points: '5 3 19 12 5 21 5 3' })
         ]),
-        isSimulating ? `Executing Agent ${activeStep} of 6...` : "Simulate Pipeline for Ananya"
+        isSimulating ? `Executing Agent ${activeStep} of 6...` : `Simulate Pipeline for ${candidateName || 'Candidate'}`
       ])
     ]),
 
     // Visual Animated 6-Agent Pipeline Strip
     React.createElement('div', { key: 'pipeline-strip', className: 'space-y-2' }, [
       React.createElement('div', { className: 'text-xs font-bold text-gray-400 uppercase tracking-wider' },
-        'Collaborative Agent Pipeline (Click any agent to inspect specs & Ananya’s mock result)'
+        `Collaborative Agent Pipeline (Click any agent to inspect specs & ${candidateName || 'candidate'} telemetry)`
       ),
 
       React.createElement('div', {
@@ -169,7 +169,7 @@ window.AgenticWorkflowPage = function({ agentWorkflow }) {
         React.createElement('div', { className: 'space-y-2' }, [
           React.createElement('div', { className: 'flex items-center justify-between' }, [
             React.createElement('h4', { className: 'text-xs font-bold uppercase tracking-wider text-gray-500' },
-              "Sample Mock Result for Ananya"
+              `Sample Mock Result for ${candidateName || 'Candidate'}`
             ),
             React.createElement('span', { className: 'sap-badge sap-badge-green text-[10px]' }, 'EXECUTION SUCCESS')
           ]),

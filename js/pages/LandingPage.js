@@ -1,34 +1,46 @@
-﻿// SkillPrint AI - Landing Page Component
-// Includes Hero, Invisible Skills Problem Flow, Real Survey Placeholder Card, Two-User Needs, and How It Works
-window.LandingPage = function({ onNavigateCandidate, onNavigateRecruiter, onOpenWeights }) {
+// SkillPrint AI - Landing Page Component
+// Includes Hero, Invisible Skills Problem Flow, Real Survey Placeholder Card, Two-User Needs, and Separate Candidate / Recruiter Login Portals
+window.LandingPage = function({
+  onNavigateCandidate,
+  onNavigateRecruiter,
+  onOpenWeights,
+  currentUser,
+  onOpenCandidateLogin,
+  onOpenRecruiterLogin,
+  onCandidateLoginSuccess,
+  onRecruiterLoginSuccess
+}) {
   const survey = window.MOCK_DATA.surveyFinding;
+  const isCandidate = currentUser && currentUser.role === 'candidate';
+  const isRecruiter = currentUser && currentUser.role === 'recruiter';
+
   return React.createElement('div', { className: 'space-y-12 lg:space-y-16 pb-12 animate-fadeIn' }, [
     
-    // 1. Hero Section
+    // 1. SkillPrint AI Opening Overview & Interactive Role Login Portals
     React.createElement('section', {
-      key: 'hero',
-      className: 'relative overflow-hidden rounded-3xl p-8 sm:p-12 lg:p-16 border border-blue-100 dark:border-blue-900/50',
+      key: 'opening-overview',
+      className: 'relative overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-14 border border-blue-100 dark:border-blue-900/50 shadow-xl',
       style: {
-        background: 'radial-gradient(circle at top right, rgba(0, 112, 242, 0.08) 0%, rgba(15, 157, 138, 0.05) 50%, transparent 100%)'
+        background: 'radial-gradient(circle at top right, rgba(0, 112, 242, 0.09) 0%, rgba(15, 157, 138, 0.06) 45%, transparent 100%)'
       }
     }, [
-      React.createElement('div', { key: 'hero-grid', className: 'grid grid-cols-1 lg:grid-cols-12 gap-8 items-center' }, [
-        // Left Copy
-        React.createElement('div', { key: 'left-col', className: 'lg:col-span-7 space-y-5' }, [
-          React.createElement('div', { key: 'kicker-row', className: 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-[#0070F2] dark:text-blue-300 text-xs font-bold tracking-wide uppercase' }, [
-            React.createElement('span', { className: 'w-2 h-2 rounded-full bg-[#0070F2]' }),
-            'SAP Hackfest 2026 • Inclusive Workforce Theme'
+      React.createElement('div', { key: 'overview-container', className: 'space-y-8' }, [
+        // Top Header Row
+        React.createElement('div', { key: 'top-header', className: 'space-y-4 max-w-4xl' }, [
+          React.createElement('div', { key: 'kicker-row', className: 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/90 dark:bg-blue-950/70 text-[#0070F2] dark:text-blue-300 text-xs font-bold tracking-wide uppercase shadow-2xs' }, [
+            React.createElement('span', { className: 'w-2 h-2 rounded-full bg-[#0070F2] animate-pulse' }),
+            'SAP Hackfest 2026 • Inclusive Workforce Theme • Platform Opening Overview'
           ]),
 
           React.createElement('h1', {
-            key: 'h1',
-            className: 'text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B1F33] dark:text-white tracking-tight leading-[1.12]'
+            key: 'main-heading',
+            className: 'text-3xl sm:text-5xl lg:text-6xl font-black text-[#0B1F33] dark:text-white tracking-tight leading-[1.12]'
           }, [
-            'Ananya is skilled. ',
+            'SkillPrint AI ',
             React.createElement('span', {
               key: 'highlight',
-              className: 'bg-clip-text text-transparent bg-gradient-to-r from-[#0070F2] to-[#0F9D8A]'
-            }, 'But is she visible?')
+              className: 'bg-clip-text text-transparent bg-gradient-to-r from-[#0070F2] via-[#0F9D8A] to-[#6B4FA3]'
+            }, '— Opening Overview')
           ]),
 
           React.createElement('p', {
@@ -38,88 +50,217 @@ window.LandingPage = function({ onNavigateCandidate, onNavigateRecruiter, onOpen
 
           React.createElement('p', {
             key: 'lead',
-            className: 'text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed'
-          }, 'Ananya is a 21-year-old final-year engineering student in a tier-3 city. Her self-driven projects, micro-certifications, competitive hackathons, and code repositories prove rigorous capability in SQL, Python, and Machine Learning. Traditional automated ATS keyword filters and institutional proxies keep her invisible. SkillPrint AI creates an explainable, evidence-first skills identity that makes her capability undeniable.'),
+            className: 'text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl'
+          }, 'Traditional campus recruitment relies on keyword-stuffed résumés and tier-1 institutional proxies, excluding millions of high-capability candidates in tier-2 and tier-3 colleges. SkillPrint AI replaces pedigree proxies with an explainable, tamper-evident skills identity built from verified multi-source artifacts: production code, competitive hackathons, and proctored assessments. Enterprise hiring teams discover hidden talent through bias-audited blind screening and transparent Skill Evidence Scores (SES).')
+        ]),
 
-          // Two Primary CTAs
+        // Interactive Role Portals & Logins Section (Candidate vs Recruiter)
+        React.createElement('div', {
+          key: 'login-gateways',
+          className: 'grid grid-cols-1 md:grid-cols-2 gap-6 pt-2'
+        }, [
+          // CARD 1: CANDIDATE PORTAL LOGIN (EMAIL OR USERNAME)
           React.createElement('div', {
-            key: 'cta-row',
-            className: 'flex flex-wrap items-center gap-4 pt-2'
+            key: 'cand-login-card',
+            className: 'sap-card p-6 rounded-2xl bg-white dark:bg-gray-800/90 border-2 border-blue-200 dark:border-blue-900/60 shadow-lg flex flex-col justify-between space-y-4 hover:border-[#0070F2] transition-all'
           }, [
-            React.createElement('button', {
-              key: 'cta-cand',
-              onClick: onNavigateCandidate,
-              className: 'sap-btn-primary px-6 py-3 text-sm flex items-center gap-2 group shadow-lg hover:shadow-xl'
-            }, [
-              React.createElement('span', {}, "I'm a Candidate (Ananya)"),
-              React.createElement('svg', { viewBox: '0 0 24 24', width: '16', height: '16', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5', className: 'group-hover:translate-x-1 transition-transform' }, [
-                React.createElement('polyline', { points: '9 18 15 12 9 6' })
+            React.createElement('div', { className: 'space-y-3' }, [
+              React.createElement('div', { className: 'flex items-center justify-between' }, [
+                React.createElement('div', { className: 'flex items-center gap-2.5' }, [
+                  React.createElement('div', { className: 'w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-[#0070F2] flex items-center justify-center font-bold text-xl shadow-xs' }, '🎓'),
+                  React.createElement('div', {}, [
+                    React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-white' }, 'Candidate Portal'),
+                    React.createElement('span', { className: 'text-[11px] font-semibold text-blue-600 dark:text-blue-400' }, 'Sign in through Email or Username')
+                  ])
+                ]),
+                React.createElement('span', { className: 'sap-badge sap-badge-blue text-[10px]' }, 'Job Seekers & Students')
+              ]),
+
+              React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-300 leading-relaxed' },
+                'Authenticate to view and curate your verified skills identity, connect proof artifacts (GitHub, HackerRank, Hackathons), inspect your dynamic SES score, and configure recruiter disclosure consent.'
+              ),
+
+              // Supported formats hint
+              React.createElement('div', { className: 'p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 text-[11px] text-blue-900 dark:text-blue-200 space-y-1' }, [
+                React.createElement('div', { className: 'font-semibold' }, 'Supported Candidate Logins (Multiple Profiles):'),
+                React.createElement('div', { className: 'text-[10px] text-blue-700 dark:text-blue-300 font-mono flex flex-wrap gap-x-3 gap-y-1' }, [
+                  React.createElement('span', {}, '• Email: person1@skillprint.ai, ananya.candidate@skillprint.ai'),
+                  React.createElement('span', {}, '• Username: person1, vikram-ml, priya-cap (or any name)')
+                ])
               ])
             ]),
 
-            React.createElement('button', {
-              key: 'cta-rec',
-              onClick: onNavigateRecruiter,
-              className: 'sap-btn-secondary px-6 py-3 text-sm flex items-center gap-2 border-2 border-gray-300 dark:border-gray-700 hover:border-[#0F9D8A] hover:text-[#0F9D8A]'
-            }, [
-              React.createElement('span', {}, "I'm a Recruiter (Evaluate Proof)"),
-              React.createElement('svg', { viewBox: '0 0 24 24', width: '16', height: '16', fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, [
-                React.createElement('path', { d: 'M15 3h6v6' }),
-                React.createElement('path', { d: 'M10 14L21 3' }),
-                React.createElement('path', { d: 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' })
+            React.createElement('div', { className: 'space-y-3 pt-2 border-t border-gray-100 dark:border-gray-700/60' }, [
+              // Main Action Button
+              React.createElement('button', {
+                type: 'button',
+                onClick: () => {
+                  if (isCandidate) onNavigateCandidate();
+                  else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                  else onNavigateCandidate();
+                },
+                className: 'w-full sap-btn-primary py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 group shadow-md hover:shadow-lg'
+              }, [
+                React.createElement('span', {}, '🎓'),
+                React.createElement('span', {}, isCandidate ? `Open Dashboard (${currentUser.name})` : 'Candidate Sign In (Email or Username)'),
+                React.createElement('svg', { viewBox: '0 0 24 24', width: '16', height: '16', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5', className: 'group-hover:translate-x-1 transition-transform' }, [
+                  React.createElement('polyline', { points: '9 18 15 12 9 6' })
+                ])
+              ]),
+
+              // Quick 1-Click Demo Candidates (Multi-Profile)
+              React.createElement('div', { className: 'flex items-center gap-1.5 flex-wrap text-[10px]' }, [
+                React.createElement('span', { className: 'text-gray-400 font-medium' }, 'Quick Demo:'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const c = window.MOCK_DATA.authUsers.candidates.find(x => x.username === 'person1') || {
+                      id: 'cand-person1',
+                      role: 'candidate',
+                      name: 'person1',
+                      email: 'person1@skillprint.ai',
+                      username: 'person1'
+                    };
+                    if (onCandidateLoginSuccess) onCandidateLoginSuccess(c);
+                    else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 hover:bg-blue-200 text-blue-800 dark:text-blue-200 font-bold'
+                }, 'person1 (New Profile)'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const c = window.MOCK_DATA.authUsers.candidates[0];
+                    if (onCandidateLoginSuccess) onCandidateLoginSuccess(c);
+                    else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'Ananya'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const c = window.MOCK_DATA.authUsers.candidates[1];
+                    if (onCandidateLoginSuccess) onCandidateLoginSuccess(c);
+                    else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'Vikram Sharma'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const c = window.MOCK_DATA.authUsers.candidates[2];
+                    if (onCandidateLoginSuccess) onCandidateLoginSuccess(c);
+                    else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'Priya Patel')
+              ])
+            ])
+          ]),
+
+          // CARD 2: RECRUITER ENTERPRISE PORTAL LOGIN (CORPORATE EMAIL)
+          React.createElement('div', {
+            key: 'rec-login-card',
+            className: 'sap-card p-6 rounded-2xl bg-white dark:bg-gray-800/90 border-2 border-teal-200 dark:border-teal-900/60 shadow-lg flex flex-col justify-between space-y-4 hover:border-[#0F9D8A] transition-all'
+          }, [
+            React.createElement('div', { className: 'space-y-3' }, [
+              React.createElement('div', { className: 'flex items-center justify-between' }, [
+                React.createElement('div', { className: 'flex items-center gap-2.5' }, [
+                  React.createElement('div', { className: 'w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-[#0F9D8A] flex items-center justify-center font-bold text-xl shadow-xs' }, '💼'),
+                  React.createElement('div', {}, [
+                    React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-white' }, 'Recruiter Enterprise Hub'),
+                    React.createElement('span', { className: 'text-[11px] font-semibold text-teal-600 dark:text-teal-400' }, 'Sign in through Corporate Email')
+                  ])
+                ]),
+                React.createElement('span', { className: 'sap-badge sap-badge-teal text-[10px]' }, 'Talent Acquisition & HR')
+              ]),
+
+              React.createElement('p', { className: 'text-xs text-gray-600 dark:text-gray-300 leading-relaxed' },
+                'Access protected enterprise blind screening where candidate demographic proxies are shielded. Compare candidate rankings by verified SES scores, inspect explainability drawers, and record decisions.'
+              ),
+
+              // Supported formats hint
+              React.createElement('div', { className: 'p-2.5 rounded-xl bg-teal-50/70 dark:bg-teal-950/40 border border-teal-100 dark:border-teal-900/40 text-[11px] text-teal-900 dark:text-teal-200 space-y-1' }, [
+                React.createElement('div', { className: 'font-semibold' }, 'Required Corporate Email Authentication:'),
+                React.createElement('div', { className: 'text-[10px] text-teal-700 dark:text-teal-300 font-mono flex flex-wrap gap-x-3 gap-y-1' }, [
+                  React.createElement('span', {}, '• sarah.jenkins@sap.com (Lead HR)'),
+                  React.createElement('span', {}, '• rajiv.menon@sap.com or corporate SSO')
+                ])
+              ])
+            ]),
+
+            React.createElement('div', { className: 'space-y-3 pt-2 border-t border-gray-100 dark:border-gray-700/60' }, [
+              // Main Action Button
+              React.createElement('button', {
+                type: 'button',
+                onClick: () => {
+                  if (isRecruiter) onNavigateRecruiter();
+                  else if (onOpenRecruiterLogin) onOpenRecruiterLogin();
+                  else onNavigateRecruiter();
+                },
+                className: 'w-full py-3 px-4 rounded-xl text-xs font-bold bg-[#0F9D8A] text-white hover:bg-[#0c8272] transition-all flex items-center justify-center gap-2 group shadow-md hover:shadow-lg'
+              }, [
+                React.createElement('span', {}, '💼'),
+                React.createElement('span', {}, isRecruiter ? `Open Recruiter Hub (${currentUser.name.split(' ')[0]})` : 'Recruiter Portal (Corporate Email)'),
+                React.createElement('svg', { viewBox: '0 0 24 24', width: '16', height: '16', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5', className: 'group-hover:translate-x-1 transition-transform' }, [
+                  React.createElement('polyline', { points: '9 18 15 12 9 6' })
+                ])
+              ]),
+
+              // Quick 1-Click Demo Recruiters
+              React.createElement('div', { className: 'flex items-center gap-1.5 flex-wrap text-[10px]' }, [
+                React.createElement('span', { className: 'text-gray-400 font-medium' }, 'Quick Demo:'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const r = window.MOCK_DATA.authUsers.recruiters[0];
+                    if (onRecruiterLoginSuccess) onRecruiterLoginSuccess(r);
+                    else if (onOpenRecruiterLogin) onOpenRecruiterLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'Sarah Jenkins (Lead HR)'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const r = window.MOCK_DATA.authUsers.recruiters[1];
+                    if (onRecruiterLoginSuccess) onRecruiterLoginSuccess(r);
+                    else if (onOpenRecruiterLogin) onOpenRecruiterLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'Rajiv Menon (Director)'),
+                React.createElement('button', {
+                  type: 'button',
+                  onClick: () => {
+                    const r = window.MOCK_DATA.authUsers.recruiters[0];
+                    if (onRecruiterLoginSuccess) onRecruiterLoginSuccess(r);
+                    else if (onOpenRecruiterLogin) onOpenRecruiterLogin();
+                  },
+                  className: 'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-gray-700 dark:text-gray-200 font-medium'
+                }, 'SAP IAS SSO')
               ])
             ])
           ])
         ]),
 
-        // Right Hero Visual Card: Mini Interactive Preview of Ananya
-        React.createElement('div', { key: 'right-col', className: 'lg:col-span-5' }, [
-          React.createElement('div', {
-            className: 'sap-card p-6 bg-white dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 shadow-xl rounded-2xl space-y-4'
-          }, [
-            React.createElement('div', { className: 'flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-3' }, [
-              React.createElement('div', { className: 'flex items-center gap-3' }, [
-                React.createElement('div', {
-                  className: 'w-11 h-11 rounded-full bg-gradient-to-tr from-[#0070F2] to-[#0F9D8A] text-white flex items-center justify-center font-bold text-base'
-                }, 'AN'),
-                React.createElement('div', {}, [
-                  React.createElement('div', { className: 'font-bold text-gray-900 dark:text-gray-100 text-sm' }, 'Ananya, 21'),
-                  React.createElement('div', { className: 'text-xs text-gray-500' }, 'Target: Data Analyst Trainee')
-                ])
-              ]),
-              React.createElement('span', { className: 'sap-badge sap-badge-green text-xs' }, '92 SES Score')
-            ]),
-
-            // Evidence Snippets
-            React.createElement('div', { className: 'space-y-2' }, [
-              React.createElement('div', { className: 'text-xs font-semibold text-gray-500 dark:text-gray-400' }, 'Verified Evidence Sources:'),
-              React.createElement('div', { className: 'grid grid-cols-2 gap-2 text-xs' }, [
-                React.createElement('div', { key: 'ev-1', className: 'p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700' }, [
-                  React.createElement('span', { className: 'font-bold text-[#0070F2]' }, '4 SQL Artifacts'),
-                  React.createElement('p', { className: 'text-[11px] text-gray-500 truncate' }, 'HackerRank 96th %ile')
-                ]),
-                React.createElement('div', { key: 'ev-2', className: 'p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700' }, [
-                  React.createElement('span', { className: 'font-bold text-[#0F9D8A]' }, '5 Python Repos'),
-                  React.createElement('p', { className: 'text-[11px] text-gray-500 truncate' }, 'Clean OOP & Pandas')
-                ]),
-                React.createElement('div', { key: 'ev-3', className: 'p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700' }, [
-                  React.createElement('span', { className: 'font-bold text-[#6B4FA3]' }, 'State Hackathon'),
-                  React.createElement('p', { className: 'text-[11px] text-gray-500 truncate' }, '2nd Prize Winner')
-                ]),
-                React.createElement('div', { key: 'ev-4', className: 'p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700' }, [
-                  React.createElement('span', { className: 'font-bold text-[#F58B1F]' }, 'Live Streamlit App'),
-                  React.createElement('p', { className: 'text-[11px] text-gray-500 truncate' }, 'Demographic Explorer')
-                ])
-              ])
-            ]),
-
-            // Blind Screening Masked Tag
-            React.createElement('div', {
-              className: 'p-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900 text-xs text-teal-800 dark:text-teal-300 flex items-center justify-between'
-            }, [
-              React.createElement('span', { className: 'font-medium' }, 'Pedigree Proxies Masked'),
-              React.createElement('span', { className: 'font-bold' }, 'Shield Active')
-            ])
+        // Overview Highlights Summary Bar
+        React.createElement('div', {
+          key: 'overview-pills',
+          className: 'grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-white/80 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 text-xs'
+        }, [
+          React.createElement('div', { key: 'p1', className: 'space-y-0.5' }, [
+            React.createElement('div', { className: 'font-bold text-[#0070F2] text-sm' }, 'Evidence Ingestion'),
+            React.createElement('div', { className: 'text-[11px] text-gray-500' }, 'Multi-source proof artifacts')
+          ]),
+          React.createElement('div', { key: 'p2', className: 'space-y-0.5' }, [
+            React.createElement('div', { className: 'font-bold text-[#0F9D8A] text-sm' }, 'Blind Screening'),
+            React.createElement('div', { className: 'text-[11px] text-gray-500' }, 'Pedigree proxies masked')
+          ]),
+          React.createElement('div', { key: 'p3', className: 'space-y-0.5' }, [
+            React.createElement('div', { className: 'font-bold text-[#6B4FA3] text-sm' }, 'Explainable SES'),
+            React.createElement('div', { className: 'text-[11px] text-gray-500' }, 'Deterministic 4-factor math')
+          ]),
+          React.createElement('div', { key: 'p4', className: 'space-y-0.5' }, [
+            React.createElement('div', { className: 'font-bold text-[#F58B1F] text-sm' }, 'SAP Ecosystem'),
+            React.createElement('div', { className: 'text-[11px] text-gray-500' }, 'BTP, HANA, HCM Integration')
           ])
         ])
       ])
@@ -248,8 +389,8 @@ window.LandingPage = function({ onNavigateCandidate, onNavigateRecruiter, onOpen
               ])
             ]),
             React.createElement('div', {}, [
-              React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-gray-100' }, 'What Ananya (Candidate) Needs'),
-              React.createElement('p', { className: 'text-xs text-gray-500' }, 'Tier-3 Engineering Student Seeking Visibility')
+              React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-gray-100' }, 'What Candidates Need'),
+              React.createElement('p', { className: 'text-xs text-gray-500' }, 'Students & Talent Seeking Visibility via Real Capability')
             ])
           ]),
 
@@ -274,47 +415,81 @@ window.LandingPage = function({ onNavigateCandidate, onNavigateRecruiter, onOpen
               React.createElement('span', { className: 'text-blue-500 font-bold' }, '✓'),
               React.createElement('span', {}, 'Maintain complete cryptographic consent over which proof items recruiters can evaluate.')
             ])
+          ]),
+
+          // Candidate Action Buttons
+          React.createElement('div', { className: 'pt-2 flex flex-wrap items-center gap-2 border-t border-gray-100 dark:border-gray-700/60' }, [
+            React.createElement('button', {
+              type: 'button',
+              onClick: () => {
+                if (isCandidate) onNavigateCandidate();
+                else if (onOpenCandidateLogin) onOpenCandidateLogin();
+                else onNavigateCandidate();
+              },
+              className: 'flex-1 py-2 px-3 rounded-xl font-bold text-xs bg-[#0070F2] text-white hover:bg-blue-600 shadow-sm transition-all flex items-center justify-center gap-1.5'
+            }, [
+              React.createElement('span', {}, '🎓'),
+              React.createElement('span', {}, isCandidate ? 'Go to Candidate Dashboard' : 'Candidate Sign In (Email / Username)')
+            ])
           ])
         ]),
 
         // Recruiter Needs Card
         React.createElement('div', {
           key: 'rec-card',
-          className: 'sap-card p-6 border-l-4 border-l-[#0F9D8A] bg-white dark:bg-gray-800/80 space-y-4'
+          className: 'sap-card p-6 border-l-4 border-l-[#0F9D8A] bg-white dark:bg-gray-800/80 space-y-4 flex flex-col justify-between'
         }, [
-          React.createElement('div', { className: 'flex items-center gap-3' }, [
-            React.createElement('div', { className: 'w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/60 text-[#0F9D8A] flex items-center justify-center font-bold' }, [
-              React.createElement('svg', { viewBox: '0 0 24 24', width: '20', height: '20', fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, [
-                React.createElement('rect', { width: '20', height: '14', x: '2', y: '7', rx: '2', ry: '2' }),
-                React.createElement('path', { d: 'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' })
+          React.createElement('div', { className: 'space-y-4' }, [
+            React.createElement('div', { className: 'flex items-center gap-3' }, [
+              React.createElement('div', { className: 'w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/60 text-[#0F9D8A] flex items-center justify-center font-bold' }, [
+                React.createElement('svg', { viewBox: '0 0 24 24', width: '20', height: '20', fill: 'none', stroke: 'currentColor', strokeWidth: '2' }, [
+                  React.createElement('rect', { width: '20', height: '14', x: '2', y: '7', rx: '2', ry: '2' }),
+                  React.createElement('path', { d: 'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' })
+                ])
+              ]),
+              React.createElement('div', {}, [
+                React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-gray-100' }, 'What Recruiters & HR Need'),
+                React.createElement('p', { className: 'text-xs text-gray-500' }, 'Enterprise Talent Acquisition & Diversity Leaders')
               ])
             ]),
-            React.createElement('div', {}, [
-              React.createElement('h3', { className: 'font-bold text-base text-gray-900 dark:text-gray-100' }, 'What Recruiters & HR Need'),
-              React.createElement('p', { className: 'text-xs text-gray-500' }, 'Enterprise Talent Acquisition & Diversity Leaders')
+
+            React.createElement('ul', { className: 'space-y-2 text-xs text-gray-700 dark:text-gray-300' }, [
+              React.createElement('li', { key: 'r1', className: 'flex items-start gap-2' }, [
+                React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
+                React.createElement('span', {}, 'Discover overlooked high-aptitude talent outside standard tier-1 campus lists.')
+              ]),
+              React.createElement('li', { key: 'r2', className: 'flex items-start gap-2' }, [
+                React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
+                React.createElement('span', {}, 'Verify claimed capabilities with proof before scheduling costly technical interviews.')
+              ]),
+              React.createElement('li', { key: 'r3', className: 'flex items-start gap-2' }, [
+                React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
+                React.createElement('span', {}, 'Eliminate biased pedigree filtering through automated Blind Screening safeguards.')
+              ]),
+              React.createElement('li', { key: 'r4', className: 'flex items-start gap-2' }, [
+                React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
+                React.createElement('span', {}, 'Understand clear AI reasoning behind every ranking without black-box confusion.')
+              ]),
+              React.createElement('li', { key: 'r5', className: 'flex items-start gap-2' }, [
+                React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
+                React.createElement('span', {}, 'Retain final human hiring agency: AI recommends, humans decide.')
+              ])
             ])
           ]),
 
-          React.createElement('ul', { className: 'space-y-2 text-xs text-gray-700 dark:text-gray-300' }, [
-            React.createElement('li', { key: 'r1', className: 'flex items-start gap-2' }, [
-              React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
-              React.createElement('span', {}, 'Discover overlooked high-aptitude talent outside standard tier-1 campus lists.')
-            ]),
-            React.createElement('li', { key: 'r2', className: 'flex items-start gap-2' }, [
-              React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
-              React.createElement('span', {}, 'Verify claimed capabilities with proof before scheduling costly technical interviews.')
-            ]),
-            React.createElement('li', { key: 'r3', className: 'flex items-start gap-2' }, [
-              React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
-              React.createElement('span', {}, 'Eliminate biased pedigree filtering through automated Blind Screening safeguards.')
-            ]),
-            React.createElement('li', { key: 'r4', className: 'flex items-start gap-2' }, [
-              React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
-              React.createElement('span', {}, 'Understand clear AI reasoning behind every ranking without black-box confusion.')
-            ]),
-            React.createElement('li', { key: 'r5', className: 'flex items-start gap-2' }, [
-              React.createElement('span', { className: 'text-teal-500 font-bold' }, '✓'),
-              React.createElement('span', {}, 'Retain final human hiring agency: AI recommends, humans decide.')
+          // Recruiter Action Buttons
+          React.createElement('div', { className: 'pt-2 flex flex-wrap items-center gap-2 border-t border-gray-100 dark:border-gray-700/60' }, [
+            React.createElement('button', {
+              type: 'button',
+              onClick: () => {
+                if (isRecruiter) onNavigateRecruiter();
+                else if (onOpenRecruiterLogin) onOpenRecruiterLogin();
+                else onNavigateRecruiter();
+              },
+              className: 'flex-1 py-2 px-3 rounded-xl font-bold text-xs bg-[#0F9D8A] text-white hover:bg-[#0c8272] shadow-sm transition-all flex items-center justify-center gap-1.5'
+            }, [
+              React.createElement('span', {}, '💼'),
+              React.createElement('span', {}, isRecruiter ? 'Go to Recruiter Hub' : 'Recruiter Portal (Corporate Email)')
             ])
           ])
         ])
@@ -395,7 +570,7 @@ window.LandingPage = function({ onNavigateCandidate, onNavigateRecruiter, onOpen
           React.createElement('button', {
             onClick: onNavigateCandidate,
             className: 'px-5 py-2.5 rounded-lg bg-white text-[#0B1F33] font-bold text-xs hover:bg-gray-100 transition-colors shadow-md'
-          }, "Explore Ananya's SkillPrint"),
+          }, "Explore Candidate Portal"),
           React.createElement('button', {
             onClick: onNavigateRecruiter,
             className: 'px-5 py-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-semibold text-xs border border-white/30 transition-colors'

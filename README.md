@@ -2,6 +2,11 @@
 
 > **"Prove what you can do — not where you come from."**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0070F2?style=for-the-badge&logo=github)](https://25091a3237-netizen.github.io/skillprint-ai/)
+[![Local Preview](https://img.shields.io/badge/Local%20Preview-http%3A%2F%2Flocalhost%3A3000-0F9D8A?style=for-the-badge)](http://localhost:3000)
+
+**🌐 Live Deployment URL**: **[https://25091a3237-netizen.github.io/skillprint-ai/](https://25091a3237-netizen.github.io/skillprint-ai/)**
+
 **Team Innovexa1**: B. Ajitesh, M. Abhilash, K. Diwakar Reddy, Shaik Faizan Basha, B. Harshavardhan  
 **Track**: Inclusive Workforce  
 **Theme**: Explainable skills identity built from verified evidence of capability instead of résumé keywords or institution prestige.

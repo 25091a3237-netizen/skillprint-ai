@@ -1,10 +1,24 @@
 // SAP Fiori Horizon Side Navigation Bar
-window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsCollapsed }) {
+// Supports Role-Based State (Candidate vs Recruiter), Authentication Badges, and Account Switching
+
+window.SideNav = function({
+  currentView,
+  setCurrentView,
+  isCollapsed,
+  setIsCollapsed,
+  currentUser,
+  onOpenCandidateLogin,
+  onOpenRecruiterLogin,
+  onLogout
+}) {
+  const isCandidate = currentUser && currentUser.role === 'candidate';
+  const isRecruiter = currentUser && currentUser.role === 'recruiter';
+
   const navItems = [
     {
       id: 'landing',
-      label: '1. Landing & Overview',
-      subtitle: 'The Invisible Skills Problem',
+      label: 'SkillPrint AI Overview',
+      subtitle: 'Opening Overview & Core Platform',
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('path', { key: 'h1', d: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }),
@@ -14,10 +28,17 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
     },
     {
       id: 'candidate',
-      label: '2. Candidate Dashboard',
-      subtitle: 'Ananya • Evidence & Score',
-      badge: 'Active Profile',
-      badgeColor: 'sap-badge-blue',
+      label: 'Candidate Portal',
+      subtitle: isCandidate ? `${currentUser.name} • Verified SES` : 'Evidence & Proof Identity',
+      badge: isCandidate ? 'Active Profile' : (isRecruiter ? 'Review Mode' : 'Candidate'),
+      badgeColor: isCandidate ? 'sap-badge-blue' : (isRecruiter ? 'sap-badge-teal' : 'sap-badge-blue'),
+      action: () => {
+        if (!currentUser) {
+          onOpenCandidateLogin();
+        } else {
+          setCurrentView('candidate');
+        }
+      },
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('path', { key: 'u1', d: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' }),
@@ -27,10 +48,17 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
     },
     {
       id: 'recruiter',
-      label: '3. Recruiter Hub',
-      subtitle: 'Blind Screening & Decision',
-      badge: '7 Candidates',
-      badgeColor: 'sap-badge-teal',
+      label: 'Recruiter Hub',
+      subtitle: isRecruiter ? `${currentUser.name} • Active` : 'Blind Screening & Evaluation',
+      badge: isRecruiter ? 'Enterprise Active' : 'Recruiter',
+      badgeColor: isRecruiter ? 'sap-badge-teal' : 'sap-badge-teal',
+      action: () => {
+        if (!currentUser || currentUser.role !== 'recruiter') {
+          onOpenRecruiterLogin();
+        } else {
+          setCurrentView('recruiter');
+        }
+      },
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('rect', { key: 'r1', width: '20', height: '14', x: '2', y: '7', rx: '2', ry: '2' }),
@@ -40,10 +68,11 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
     },
     {
       id: 'architecture',
-      label: '4. SAP Architecture & Backend',
+      label: 'SAP Architecture & Backend',
       subtitle: 'BTP, HANA, Agents API & HCM',
       badge: 'Live Engine',
       badgeColor: 'sap-badge-orange',
+      action: () => setCurrentView('architecture'),
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('polygon', { key: 'p1', points: '12 2 2 7 12 12 22 7 12 2' }),
@@ -54,8 +83,9 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
     },
     {
       id: 'impact',
-      label: '5. Impact & Scalability',
+      label: 'Impact & Scalability',
       subtitle: 'Enterprise Value & Roadmap',
+      action: () => setCurrentView('impact'),
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('path', { key: 't1', d: 'M22 12h-4l-3 9L9 3l-3 9H2' })
@@ -71,12 +101,6 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
   }, [
     // Navigation List
     React.createElement('div', { key: 'nav-content', className: 'p-3' }, [
-      // Section header
-      !isCollapsed && React.createElement('div', {
-        key: 'section-hdr',
-        className: 'px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500'
-      }, 'Navigation Flow'),
-
       // Item Buttons
       React.createElement('nav', { key: 'nav-list', className: 'space-y-1 mt-1', 'aria-label': 'Sidebar Navigation' },
         navItems.map(item => {
@@ -85,7 +109,7 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
 
           return React.createElement('button', {
             key: item.id,
-            onClick: () => setCurrentView(item.id),
+            onClick: item.action || (() => setCurrentView(item.id)),
             className: `w-full text-left rounded-xl transition-all flex items-center gap-3 ${
               isCollapsed ? 'p-3 justify-center' : 'px-3.5 py-3'
             } ${
@@ -114,26 +138,70 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
       )
     ]),
 
-    // Bottom info box
+    // Bottom Section: Active User Card or Quick Logins
     React.createElement('div', { key: 'bottom-box', className: 'p-3 border-t border-gray-200 dark:border-gray-800' }, [
-      !isCollapsed ? React.createElement('div', {
-        key: 'hackfest-card',
-        className: 'p-3 rounded-xl bg-gradient-to-br from-blue-50 to-teal-50 dark:from-blue-950/30 dark:to-teal-950/30 border border-blue-100 dark:border-blue-900/40 text-xs'
-      }, [
-        React.createElement('div', { key: 'hdr', className: 'flex items-center gap-1.5 font-bold text-gray-900 dark:text-gray-100' }, [
-          React.createElement('span', { key: 'pulse', className: 'w-2 h-2 rounded-full bg-green-500 animate-pulse' }),
-          'SAP Hackfest 2026'
-        ]),
-        React.createElement('p', { key: 'body', className: 'text-[11px] text-gray-600 dark:text-gray-400 mt-1 leading-relaxed' },
-          'Inclusive Workforce Track: Overcoming proxy hiring through verified proof of capability.'
-        ),
-        React.createElement('div', { key: 'team', className: 'mt-2 text-[10px] text-gray-400 dark:text-gray-500 font-mono' },
-          'Team Innovexa1'
-        )
-      ]) : React.createElement('div', {
+      !isCollapsed ? (
+        currentUser ? React.createElement('div', {
+          key: 'user-status-card',
+          className: 'p-3 rounded-2xl bg-gradient-to-br from-blue-50/70 to-teal-50/70 dark:from-gray-800/80 dark:to-gray-800/80 border border-gray-200 dark:border-gray-700 text-xs space-y-2.5'
+        }, [
+          React.createElement('div', { className: 'flex items-center gap-2.5' }, [
+            React.createElement('div', {
+              className: 'w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-xs shadow-sm shrink-0',
+              style: { backgroundColor: currentUser.avatarColor || (isRecruiter ? '#0F9D8A' : '#0070F2') }
+            }, currentUser.avatarInitials || (isRecruiter ? 'HR' : 'CD')),
+            React.createElement('div', { className: 'min-w-0 flex-1' }, [
+              React.createElement('div', { className: 'font-bold text-gray-900 dark:text-white truncate text-xs' }, currentUser.name),
+              React.createElement('div', { className: 'text-[10px] text-gray-500 dark:text-gray-400 truncate' },
+                isRecruiter ? 'Enterprise Evaluator' : (currentUser.email || currentUser.username)
+              )
+            ]),
+            React.createElement('span', {
+              className: `sap-badge text-[9px] py-0.5 px-1.5 ${isRecruiter ? 'sap-badge-teal' : 'sap-badge-blue'}`
+            }, isRecruiter ? 'HR' : 'Cand')
+          ]),
+
+          React.createElement('div', { className: 'flex items-center gap-2 pt-1 border-t border-gray-200 dark:border-gray-700/60' }, [
+            React.createElement('button', {
+              type: 'button',
+              onClick: isRecruiter ? onOpenCandidateLogin : onOpenRecruiterLogin,
+              className: 'flex-1 py-1 px-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-[10px] font-semibold text-gray-700 dark:text-gray-200 hover:text-blue-600 transition-colors truncate'
+            }, isRecruiter ? 'Switch to Candidate' : 'Switch to Recruiter'),
+            React.createElement('button', {
+              type: 'button',
+              onClick: onLogout,
+              className: 'py-1 px-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-[10px] font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 transition-colors'
+            }, 'Sign Out')
+          ])
+        ]) : React.createElement('div', {
+          key: 'guest-login-buttons',
+          className: 'space-y-2'
+        }, [
+          React.createElement('button', {
+            onClick: onOpenCandidateLogin,
+            className: 'w-full py-2 px-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#0070F2] dark:text-blue-300 border border-blue-200 dark:border-blue-900/60 text-xs font-bold hover:bg-blue-100 transition-all flex items-center justify-between group shadow-xs'
+          }, [
+            React.createElement('span', { className: 'flex items-center gap-1.5' }, [
+              React.createElement('span', {}, '🎓'),
+              React.createElement('span', {}, 'Candidate Login')
+            ]),
+            React.createElement('span', { className: 'text-[10px] font-normal text-blue-600 dark:text-blue-400 opacity-90' }, 'Email / User')
+          ]),
+          React.createElement('button', {
+            onClick: onOpenRecruiterLogin,
+            className: 'w-full py-2 px-3 rounded-xl bg-[#0F9D8A] text-white text-xs font-bold hover:bg-[#0c8272] transition-all flex items-center justify-between shadow-xs'
+          }, [
+            React.createElement('span', { className: 'flex items-center gap-1.5' }, [
+              React.createElement('span', {}, '💼'),
+              React.createElement('span', {}, 'Recruiter Portal')
+            ]),
+            React.createElement('span', { className: 'text-[10px] font-normal text-teal-100 opacity-90' }, 'Corporate Email')
+          ])
+        ])
+      ) : React.createElement('div', {
         key: 'collapsed-indicator',
         className: 'flex justify-center text-xs font-bold text-blue-500'
-      }, 'SAP')
+      }, isRecruiter ? 'HR' : 'SAP')
     ])
   ]);
 };
