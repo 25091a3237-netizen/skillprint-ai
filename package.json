@@ -1,0 +1,18 @@
+{
+  "name": "skillprint-ai",
+  "version": "1.0.0",
+  "description": "SkillPrint AI - Explainable skills identity for candidates built from verified evidence for SAP Hackfest 2026",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y serve ."
+  },
+  "keywords": [
+    "sap-hackfest-2026",
+    "inclusive-workforce",
+    "skills-identity",
+    "fiori-horizon",
+    "explainable-ai"
+  ],
+  "author": "Team Innovexa1",
+  "license": "MIT"
+}
