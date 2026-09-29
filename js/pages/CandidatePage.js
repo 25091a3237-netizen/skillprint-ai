@@ -13,6 +13,7 @@ window.CandidatePage = function({
 }) {
   const [selectedRoleId, setSelectedRoleId] = React.useState(ananyaProfile.targetRoleId || 'role-1');
   const [selectedSkillFilter, setSelectedSkillFilter] = React.useState('ALL');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = React.useState('ALL');
 
   // Compute dynamic candidate SES based on authorized evidence and active weights
   const overallSES = window.SES_ENGINE.computeCandidateSES(evidenceList, weights);
@@ -296,9 +297,35 @@ window.CandidatePage = function({
         )
       ]),
 
+      // Evidence Category Filter Pills
+      React.createElement('div', { key: 'cat-filter-pills', className: 'flex flex-wrap items-center gap-2 pb-1' },
+        ['ALL', ...categories].map(c => {
+          const isSelected = selectedCategoryFilter === c;
+          const count = c === 'ALL' ? evidenceList.length : evidenceList.filter(e => e.category === c).length;
+          return React.createElement('button', {
+            key: c,
+            type: 'button',
+            onClick: () => setSelectedCategoryFilter(c),
+            className: `px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer ${
+              isSelected
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/70 text-[#0070F2] dark:text-blue-300 shadow-xs ring-1 ring-blue-500/20'
+                : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`
+          }, [
+            React.createElement('span', { key: 'name' }, c === 'ALL' ? 'All Categories' : c),
+            React.createElement('span', {
+              key: 'cnt',
+              className: `px-1.5 py-0.5 rounded-full text-[10px] font-mono ${
+                isSelected ? 'bg-blue-200 dark:bg-blue-800 text-blue-900 dark:text-blue-100' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+              }`
+            }, count)
+          ]);
+        })
+      ),
+
       // 5 Evidence Category Sections
       React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5' },
-        categories.map(cat => {
+        (selectedCategoryFilter === 'ALL' ? categories : categories.filter(c => c === selectedCategoryFilter)).map(cat => {
           const itemsInCat = evidenceList.filter(e => e.category === cat);
           return React.createElement('div', {
             key: cat,
