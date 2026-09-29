@@ -63,15 +63,10 @@ window.ShellBar = function({ currentView, setCurrentView, isDarkMode, setIsDarkM
         'Recruiter Hub'
       ]),
       React.createElement('button', {
-        key: 'btn-agent',
-        onClick: () => setCurrentView('agents'),
-        className: `px-3 py-1.5 rounded-md transition-all ${currentView === 'agents' ? 'bg-white dark:bg-gray-700 shadow-sm font-semibold text-[#0070F2] dark:text-blue-300' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900'}`
-      }, 'Agents'),
-      React.createElement('button', {
         key: 'btn-arch',
         onClick: () => setCurrentView('architecture'),
         className: `px-3 py-1.5 rounded-md transition-all ${currentView === 'architecture' ? 'bg-white dark:bg-gray-700 shadow-sm font-semibold text-[#0070F2] dark:text-blue-300' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900'}`
-      }, 'SAP Arch')
+      }, 'SAP Arch & Backend')
     ]),
 
     // Right Utilities (Weights, Dark mode, notifications, profile)

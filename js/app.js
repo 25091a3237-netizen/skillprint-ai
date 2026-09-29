@@ -3,7 +3,7 @@
 
 window.App = function() {
   // Global View Navigation
-  const [currentView, setCurrentView] = React.useState('landing'); // 'landing', 'candidate', 'recruiter', 'agents', 'architecture', 'impact'
+  const [currentView, setCurrentView] = React.useState('landing'); // 'landing', 'candidate', 'recruiter', 'architecture', 'impact'
   
   // Theme Mode (Light / Dark SAP Horizon)
   const [isDarkMode, setIsDarkMode] = React.useState(false);
@@ -149,12 +149,9 @@ window.App = function() {
             onUpdateCandidateDecision: handleUpdateCandidateDecision
           }),
 
-          currentView === 'agents' && React.createElement(window.AgenticWorkflowPage, {
-            agentWorkflow: window.MOCK_DATA.agentWorkflow
-          }),
-
           currentView === 'architecture' && React.createElement(window.SapArchitecturePage, {
-            sapArchitecture: window.MOCK_DATA.sapArchitecture
+            sapArchitecture: window.MOCK_DATA.sapArchitecture,
+            backendAgents: window.MOCK_DATA.agentWorkflow
           }),
 
           currentView === 'impact' && React.createElement(window.ImpactScalePage, {

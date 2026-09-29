@@ -39,26 +39,10 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
       }
     },
     {
-      id: 'agents',
-      label: '4. Agentic Workflow',
-      subtitle: '6 Collaborating Agents',
-      badge: 'Pipeline',
-      badgeColor: 'sap-badge-purple',
-      icon: function(color) {
-        return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
-          React.createElement('rect', { key: 'a1', x: '3', y: '3', width: '6', height: '6', rx: '1' }),
-          React.createElement('rect', { key: 'a2', x: '15', y: '3', width: '6', height: '6', rx: '1' }),
-          React.createElement('rect', { key: 'a3', x: '9', y: '15', width: '6', height: '6', rx: '1' }),
-          React.createElement('path', { key: 'a4', d: 'M6 9v3a3 3 0 0 0 3 3h3' }),
-          React.createElement('path', { key: 'a5', d: 'M18 9v3a3 3 0 0 1-3 3h-3' })
-        ]);
-      }
-    },
-    {
       id: 'architecture',
-      label: '5. SAP Architecture',
-      subtitle: 'BTP, HANA & SuccessFactors',
-      badge: 'Live vs Mock',
+      label: '4. SAP Architecture & Backend',
+      subtitle: 'BTP, HANA, Agents API & HCM',
+      badge: 'Live Engine',
       badgeColor: 'sap-badge-orange',
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
@@ -70,8 +54,8 @@ window.SideNav = function({ currentView, setCurrentView, isCollapsed, setIsColla
     },
     {
       id: 'impact',
-      label: '6. Impact & Scale',
-      subtitle: 'Value & Scalability Path',
+      label: '5. Impact & Scalability',
+      subtitle: 'Enterprise Value & Roadmap',
       icon: function(color) {
         return React.createElement('svg', { viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }, [
           React.createElement('path', { key: 't1', d: 'M22 12h-4l-3 9L9 3l-3 9H2' })
