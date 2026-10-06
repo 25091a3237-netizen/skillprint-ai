@@ -3,6 +3,30 @@
 
 window.App = function() {
   // Authentication State: Clean initial state (null) — no default Ananya on the candidate bar
+  // URL Hash & Path Route Helper (Supports #/dashboard, #/candidate, #/recruiter, /dashboard, etc.)
+  const parseRouteFromUrl = () => {
+    try {
+      const hash = (window.location.hash || '').toLowerCase().replace(/^#\/?/, '').trim();
+      const path = (window.location.pathname || '').toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const queryRoute = (params.get('view') || params.get('page') || params.get('tab') || '').toLowerCase();
+
+      const route = hash || queryRoute || (path.includes('dashboard') ? 'dashboard' : (path.includes('candidate') ? 'candidate' : (path.includes('recruiter') ? 'recruiter' : (path.includes('architecture') ? 'architecture' : (path.includes('impact') ? 'impact' : '')))));
+
+      if (route.includes('dashboard') || route.includes('candidate')) return 'candidate';
+      if (route.includes('recruiter') || route.includes('screening')) return 'recruiter';
+      if (route.includes('arch') || route.includes('agent')) return 'architecture';
+      if (route.includes('impact') || route.includes('scale')) return 'impact';
+      if (route.includes('landing') || route.includes('home')) return 'landing';
+    } catch (e) {
+      console.warn('Error reading URL route:', e);
+    }
+    return 'landing';
+  };
+
+  const initialRoute = parseRouteFromUrl();
+
+  // Authentication State: Clean initial state or auto-demo if visiting dashboard/recruiter directly
   const [currentUser, setCurrentUser] = React.useState(() => {
     try {
       const saved = localStorage.getItem('skillprint_active_user');
@@ -13,12 +37,51 @@ window.App = function() {
     } catch (e) {
       console.warn('Error reading saved user session:', e);
     }
-    // Default initial user: null (Guest - candidate bar does not default to Ananya)
+    // If arriving directly on candidate or dashboard route, pre-load demo candidate for instant preview
+    if (initialRoute === 'candidate' && window.MOCK_DATA && window.MOCK_DATA.authUsers && window.MOCK_DATA.authUsers.candidates) {
+      return window.MOCK_DATA.authUsers.candidates[0];
+    }
+    // If arriving directly on recruiter route, pre-load demo recruiter
+    if (initialRoute === 'recruiter' && window.MOCK_DATA && window.MOCK_DATA.authUsers && window.MOCK_DATA.authUsers.recruiters) {
+      return window.MOCK_DATA.authUsers.recruiters[0];
+    }
     return null;
   });
 
-  // Global View Navigation
-  const [currentView, setCurrentView] = React.useState('landing'); // 'landing', 'candidate', 'recruiter', 'architecture', 'impact'
+  // Global View Navigation with URL hash synchronization
+  const [currentView, _setCurrentView] = React.useState(initialRoute);
+
+  const setCurrentView = (view) => {
+    _setCurrentView(view);
+    try {
+      const targetHash = view === 'landing' ? '' : '#/' + view;
+      if (window.location.hash !== targetHash) {
+        if (view === 'landing') {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        } else {
+          window.location.hash = '/' + view;
+        }
+      }
+    } catch (e) {}
+  };
+
+  // Sync with browser back/forward and direct hash changes
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      const target = parseRouteFromUrl();
+      if (target && target !== currentView) {
+        if (target === 'candidate' && !currentUser && window.MOCK_DATA && window.MOCK_DATA.authUsers) {
+          handleCandidateLoginSuccess(window.MOCK_DATA.authUsers.candidates[0]);
+        } else if (target === 'recruiter' && (!currentUser || currentUser.role !== 'recruiter') && window.MOCK_DATA && window.MOCK_DATA.authUsers) {
+          handleRecruiterLoginSuccess(window.MOCK_DATA.authUsers.recruiters[0]);
+        } else {
+          _setCurrentView(target);
+        }
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [currentView, currentUser]); // 'landing', 'candidate', 'recruiter', 'architecture', 'impact'
   
   // Theme Mode (Light / Dark SAP Horizon)
   const [isDarkMode, setIsDarkMode] = React.useState(false);

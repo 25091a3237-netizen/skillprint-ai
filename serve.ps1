@@ -1,4 +1,4 @@
-$port = 3000
+﻿$port = 3000
 $root = 'c:\Users\shaik\OneDrive\Desktop\skillprint-ai'
 $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $port)
 $listener.Start()
@@ -168,6 +168,7 @@ while ($true) {
     $rel = $rawUrl.TrimStart('/').Replace('/', '\')
     $path = Join-Path $root $rel
 
+    $indexPath = Join-Path $root 'index.html'
     if (Test-Path $path -PathType Leaf) {
       $ext = [System.IO.Path]::GetExtension($path).ToLower()
       $mime = if ($mimeMap.ContainsKey($ext)) { $mimeMap[$ext] } else { 'application/octet-stream' }
@@ -177,6 +178,13 @@ while ($true) {
       $stream.Write($hdrBytes, 0, $hdrBytes.Length)
       $stream.Write($bytes, 0, $bytes.Length)
       Write-Host ('  200  ' + $rawUrl)
+    } elseif (-not [System.IO.Path]::HasExtension($rawUrl) -and (Test-Path $indexPath -PathType Leaf)) {
+      $bytes = [System.IO.File]::ReadAllBytes($indexPath)
+      $header = "HTTP/1.1 200 OK`r`nContent-Type: text/html; charset=utf-8`r`nContent-Length: $($bytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+      $hdrBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+      $stream.Write($hdrBytes, 0, $hdrBytes.Length)
+      $stream.Write($bytes, 0, $bytes.Length)
+      Write-Host ('  200 (SPA Route) ' + $rawUrl)
     } else {
       $msg = '404 Not Found: ' + $rawUrl
       $msgBytes = [System.Text.Encoding]::UTF8.GetBytes($msg)
@@ -191,3 +199,4 @@ while ($true) {
     # Silently handle transient connection drops
   }
 }
+

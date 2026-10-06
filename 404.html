@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillPrint AI | Redirecting...</title>
+  <script>
+    (function() {
+      var path = window.location.pathname;
+      var repoPrefix = '/skillprint-ai';
+      var cleanPath = path;
+      if (cleanPath.startsWith(repoPrefix)) {
+        cleanPath = cleanPath.substring(repoPrefix.length);
+      }
+      cleanPath = cleanPath.replace(/^\/+|\/+$/g, '');
+      var hashRoute = cleanPath ? '#/' + cleanPath : '';
+      var target = repoPrefix + '/' + hashRoute + window.location.search;
+      window.location.replace(target);
+    })();
+  </script>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f4f9; color: #0b1f33;">
+  <div style="text-align: center; padding: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #0070F2;">SkillPrint AI</h2>
+    <p style="color: #64748b;">Redirecting to dashboard view...</p>
+  </div>
+</body>
+</html>
